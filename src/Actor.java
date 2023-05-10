@@ -24,6 +24,10 @@ public class Actor extends Body {
 		this.crouching = false;
 	}
 
+	public void move(double time) {
+		super.move(time);
+	}
+
 	public ArrayList<Body> checkEntityCollisions(ArrayList<Body> bodies) {
 		ArrayList<Body> out = new ArrayList<Body>();
 
@@ -36,9 +40,13 @@ public class Actor extends Body {
 		return out;
 	}
 
-	public void update(double deltaT) {
-		double elapsed = 0.0;
-		// move forward pixel by pixel along with time until `elapsed (>)= deltaT`
+	public void update(double deltaT, int steps, ArrayList<Body> bodies) {
+		double timeStep = deltaT / steps;
 
+		while (deltaT > timeStep / 2) {
+			this.move(timeStep);
+
+			ArrayList<Body> collided = this.checkEntityCollisions(bodies);
+		}
 	}
 }

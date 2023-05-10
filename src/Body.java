@@ -20,9 +20,34 @@ public class Body {
 		this.yJerk = 0.0;
 	}
 
-	public void setPosition(double xOrigin, double yOrigin) {
-		this.xOrigin = xOrigin;
-		this.yOrigin = yOrigin;
+	public void move(double time) {
+		this.xOrigin += (1.0 / 6.0) * this.xJerk * Math.pow(time, 3.0) + (1.0 / 2.0) * this.xAcceleration * Math.pow(time, 2.0) + this.xVelocity * time;
+		this.yOrigin += (1.0 / 6.0) * this.yJerk * Math.pow(time, 3.0) + (1.0 / 2.0) * this.yAcceleration * Math.pow(time, 2.0) + this.yVelocity * time;
+
+		this.xVelocity += (1.0 / 2.0) * this.xJerk * Math.pow(time, 2.0) + this.xAcceleration * time;
+		this.yVelocity += (1.0 / 2.0) * this.yJerk * Math.pow(time, 2.0) + this.yAcceleration * time;
+
+		this.xAcceleration += this.xJerk * time;
+		this.yAcceleration += this.yJerk * time;
+	}
+
+	public void setPosition(double xDest, double yDest) {
+		this.xOrigin = xDest;
+		this.yOrigin = yDest;
+
+		this.xVelocity = 0.0;
+		this.yVelocity = 0.0;
+
+		this.xAcceleration = 0.0;
+		this.yAcceleration = 0.0;
+
+		this.xAcceleration = 0.0;
+		this.yAcceleration = 0.0;
+	}
+
+	public void teleport(double xDest, double yDest) {
+		this.xOrigin = xDest;
+		this.yOrigin = yDest;
 	}
 
 	public int getIntXPosition() {
