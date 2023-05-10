@@ -1,8 +1,2 @@
-name: lobby
-
-spawnLocations {
-    default: (10, 6);
-    alt1: (35, 12);
-}
-
-
+name:lobby
+spawnLocations { default:(10,6); alt1:(35,12); }
