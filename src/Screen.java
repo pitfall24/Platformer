@@ -35,6 +35,8 @@ public class Screen {
 			
 		}
 
+		sc.close();
+
 		return out;
 	}
 }
