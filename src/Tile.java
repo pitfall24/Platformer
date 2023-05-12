@@ -1,13 +1,7 @@
 import java.util.Scanner;
 import java.io.File;
 
-public class Tile {
-	String name;
-
-	byte[][] redTexture;
-	byte[][] greenTexture;
-	byte[][] blueTexture;
-
+public class Tile extends Texture {
 	Body hitbox;
 	int xPosition;
 	int yPosition;
@@ -16,9 +10,10 @@ public class Tile {
 	boolean canInteract;
 
 	public Tile(String name, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
+		super(name);
+
 		this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
 
-		this.name = name;
 		this.hasHitbox = hasHitbox;
 		this.canInteract = canInteract;
 

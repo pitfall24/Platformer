@@ -1,7 +1,10 @@
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) throws Exception {
-        Tile testTile = new Tile("solid-black", false, false, 0, 0);
+        File sourceDir = new File();
+        File targetDir = new File();
 
-        System.out.println(testTile);
+        Utilities.createBinaries();
     }
 }
