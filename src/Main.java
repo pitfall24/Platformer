@@ -2,9 +2,10 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        File sourceDir = new File();
-        File targetDir = new File();
+        File sourceDir = new File("resources/setup");
+        File targetDir = new File("resources/tiles");
 
-        Utilities.createBinaries();
+        Utilities.cleanDir(targetDir, true);
+        Utilities.createTileBinaries(sourceDir, targetDir);
     }
 }
