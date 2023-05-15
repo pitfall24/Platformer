@@ -27,12 +27,14 @@ public class Tile {
 	public Tile(String name, String texturePath, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
 		this.name = name;
 
-		this.hitBox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+		this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
 
 		this.hasHitbox = hasHitbox;
 		this.canInteract = canInteract;
 
-		
+		ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(texturePath));
+		this.texture = (Texture) objIn.readObject();
+		objIn.close();
 	}
 
 	public String toString() {
