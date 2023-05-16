@@ -11,6 +11,7 @@ public class Texture implements Serializable {
     byte[][] redTexture;
     byte[][] greenTexture;
     byte[][] blueTexture;
+    byte[][] alphaTexture;
 
     public Texture(String name, int width, int height) {
         this.name = name;
@@ -21,6 +22,7 @@ public class Texture implements Serializable {
         this.redTexture = new byte[height][width];
         this.greenTexture = new byte[height][width];
         this.blueTexture = new byte[height][width];
+        this.alphaTexture = new byte[height][width];
 
         this.loadTexture(name);
     }
@@ -62,6 +64,17 @@ public class Texture implements Serializable {
                 }
             }
 
+            assert(sc.nextLine().equals("alphaTexture:"));
+            sc.nextLine();
+            for (int i = 0; i < this.height; i++) {
+                String line = sc.nextLine();
+
+                for (int j = 0; j < this.width; j++) {
+                    this.alphaTexture[i][j] = Byte.valueOf("" + (Integer.valueOf(line.substring(0, line.indexOf(","))) - 128));
+                    line = line.substring(line.indexOf(",") + 1);
+                }
+            }
+
             sc.close();
         } catch (Exception e) {
             System.out.println(e);
@@ -89,6 +102,14 @@ public class Texture implements Serializable {
 
         out += "blueTexture:\n";
         for (byte[] row : this.blueTexture) {
+            for (byte i : row) {
+                out += i + ", ";
+            }
+            out += "\n";
+        }
+
+        out += "alphaTexture:\n";
+        for (byte[] row : this.alphaTexture) {
             for (byte i : row) {
                 out += i + ", ";
             }
