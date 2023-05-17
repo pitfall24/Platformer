@@ -1,6 +1,5 @@
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.core.PGraphics;
 
 public class Body extends PApplet {
 	int width, height;
@@ -70,17 +69,17 @@ public class Body extends PApplet {
 	}
 
 	public boolean colliding(Body other) {
-		boolean xOverlap = this.xOrigin - this.width / 2 < other.xOrigin + other.width / 2 && this.xOrigin + this.width / 2 > other.xOrigin - other.width / 2;
+		boolean xOverlap = this.xOrigin - this.width / 2 < other.xOrigin + other.width / 2 b&& this.xOrigin + this.width / 2 > other.xOrigin - other.width / 2;
 		boolean yOverlap = this.yOrigin + this.height / 2 > other.yOrigin - other.height / 2 && this.yOrigin - this.height / 2 < other.yOrigin + other.height / 2;
 
 		return xOverlap && yOverlap;
 	}
 
-	public void draw(PGraphics pg) {
-		int mode = this.getGraphics().rectMode;
+	public void draw(PApplet sketch) {
+		int mode = sketch.getGraphics().rectMode;
 
-		this.rectMode(PConstants.CENTER);
-		pg.rect((float) this.xOrigin, (float) this.yOrigin, (float) this.width, (float) this.height);
-		this.rectMode(mode);
+		sketch.rectMode(PConstants.CENTER);
+		sketch.rect((float) this.xOrigin, (float) this.yOrigin, (float) this.width, (float) this.height);
+		sketch.rectMode(mode);
 	}
 }
