@@ -1,4 +1,8 @@
-public class Body {
+import processing.core.PApplet;
+import processing.core.PConstants;
+import processing.core.PGraphics;
+
+public class Body extends PApplet {
 	int width, height;
 	double xOrigin, yOrigin;
 	double xVelocity, yVelocity;
@@ -23,10 +27,13 @@ public class Body {
 	public void move(double time) {
 		// For decent jump curve thingy:
 		// yOrigin=0, yVelocity=10, vAcceleration=-9.8, yJerk=3.3
-		// Once passed yOrigin going down or interacted with something, set yJerk=0 so you dont fly to infinity.
+		// Once passed yOrigin going down or interacted with something, set yJerk=0 so
+		// you dont fly to infinity.
 
-		this.xOrigin += (1.0 / 6.0) * this.xJerk * Math.pow(time, 3.0) + (1.0 / 2.0) * this.xAcceleration * Math.pow(time, 2.0) + this.xVelocity * time;
-		this.yOrigin += (1.0 / 6.0) * this.yJerk * Math.pow(time, 3.0) + (1.0 / 2.0) * this.yAcceleration * Math.pow(time, 2.0) + this.yVelocity * time;
+		this.xOrigin += (1.0 / 6.0) * this.xJerk * Math.pow(time, 3.0)
+				+ (1.0 / 2.0) * this.xAcceleration * Math.pow(time, 2.0) + this.xVelocity * time;
+		this.yOrigin += (1.0 / 6.0) * this.yJerk * Math.pow(time, 3.0)
+				+ (1.0 / 2.0) * this.yAcceleration * Math.pow(time, 2.0) + this.yVelocity * time;
 
 		this.xVelocity += (1.0 / 2.0) * this.xJerk * Math.pow(time, 2.0) + this.xAcceleration * time;
 		this.yVelocity += (1.0 / 2.0) * this.yJerk * Math.pow(time, 2.0) + this.yAcceleration * time;
@@ -65,7 +72,15 @@ public class Body {
 	public boolean colliding(Body other) {
 		boolean xOverlap = this.xOrigin - this.width / 2 < other.xOrigin + other.width / 2 && this.xOrigin + this.width / 2 > other.xOrigin - other.width / 2;
 		boolean yOverlap = this.yOrigin + this.height / 2 > other.yOrigin - other.height / 2 && this.yOrigin - this.height / 2 < other.yOrigin + other.height / 2;
-		
+
 		return xOverlap && yOverlap;
+	}
+
+	public void draw(PGraphics pg) {
+		int mode = this.getGraphics().rectMode;
+
+		this.rectMode(PConstants.CENTER);
+		pg.rect((float) this.xOrigin, (float) this.yOrigin, (float) this.width, (float) this.height);
+		this.rectMode(mode);
 	}
 }

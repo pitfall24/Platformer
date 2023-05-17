@@ -3,5 +3,6 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar"
-    ]
+    ],
+    "processing.path": "C:\\Users\\326517\\Downloads\\processing-4.0.1-windows-x64\\processing-4.0.1"
 }
