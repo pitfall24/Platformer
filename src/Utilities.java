@@ -7,7 +7,7 @@ public class Utilities {
         for (File file : sourceDir.listFiles()) {
             Texture testTexture = new Texture(file.getAbsolutePath(), 8, 8);
 
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetDir.getAbsolutePath() + "\\" + Utilities.removeExtension(file) + ".bin"));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetDir.getAbsolutePath() + "/" + Utilities.removeExtension(file) + ".bin"));
 
             out.writeObject(testTexture);
             out.close();

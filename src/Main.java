@@ -3,13 +3,13 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) throws Exception {
         
-        File sourceDir = new File("resources/setup");
-        File targetDir = new File("resources/tiles");
+        File sourceDir = new File("resources/textures/tiles");
+        File targetDir = new File("resources/textures/bin");
 
         Utilities.cleanDir(targetDir, true);
         Utilities.createTileBinaries(sourceDir, targetDir);
 
-        Tile testTile = new Tile("solid-black", "./resources/tiles/solid-black.bin", true, true, 0, 0);
+        Tile testTile = new Tile("solid-black", "./resources/textures/bin/solid-black.bin", true, true, 0, 0);
         
         System.out.println("solid-black:");
         System.out.println(testTile);
