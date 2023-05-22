@@ -39,6 +39,10 @@ public class Actor extends Body {
 
     return out;
   }
+  
+  public void blindUpdate(double deltaT) {
+    super.move(deltaT);
+  }
 
   public void update(double deltaT, int steps, ArrayList<Body> bodies) {
     double timeStep = deltaT / steps;

@@ -1,3 +1,5 @@
+Screen spawn;
+
 Body b1;
 Body b2;
 
@@ -5,6 +7,8 @@ void setup() {
   size(600, 400);
   
   rectMode(CENTER);
+  
+  spawn = new Screen("spawn");
   
   b1 = new Body(80, 100, 90, 120);
   b2 = new Body(8, 10, 50, 150);
