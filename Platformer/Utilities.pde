@@ -3,14 +3,23 @@ import java.io.FileOutputStream;
 import java.io.File;
 import java.util.Scanner;
 
+public void refreshTileBinaries() throws Exception {
+  File targetDir = new File("C:/Users/326517/Platformer/Platformer/resources/textures/bin");
+  File sourceDir = new File("C:/Users/326517/Platformer/Platformer/resources/textures/tiles");
+  
+  cleanDir(targetDir, false);  
+  createTileBinaries(sourceDir, targetDir);
+}
+
 public void createTileBinaries(File sourceDir, File targetDir) throws Exception {
   for (File file : sourceDir.listFiles()) {
-    Texture testTexture = new Texture(file.getAbsolutePath(), 8, 8);
-
+    Texture texture = new Texture(file.getAbsolutePath(), 8, 8);
+    
     ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetDir.getAbsolutePath() + "/" + removeExtension(file) + ".bin"));
-
-    out.writeObject(testTexture);
+    
+    out.writeObject(texture);
     out.close();
+    
   }
 }
 
@@ -28,9 +37,9 @@ public void cleanDir(File dir, boolean recursive) {
   }
 }
 
-public String removeExtension(File file) {
+public String removeExtension(File file) throws Exception {
   if (file.isDirectory()) {
-    return "";
+    throw new Exception("Cannot remove extension from directory");
   } else {
     return removeExtension(file.getName());
   }

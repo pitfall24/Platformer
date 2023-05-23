@@ -55,9 +55,9 @@ public class Screen {
         String ln = sc.nextLine();
         for (int j = 0; j < this.width; j++) {
           String next = ln.substring(0, ln.indexOf(","));
-          ln = ln.substring(next.length() + 2);
+          ln = ln.substring(next.length() + 1);
           
-          this.screen[i][j] = new Tile(next, next + ".txt", true, false, j * 8, i * 8);
+          this.screen[i][j] = new Tile(next, "C:/Users/326517/Platformer/Platformer/resources/textures/bin/" + next + ".bin", true, false, j * 8, i * 8);
         }
       }
       
@@ -65,5 +65,25 @@ public class Screen {
     } catch (Exception e) {
       System.out.println(e);
     }
+  }
+  
+  public String toString() {
+    String out = this.name + "\n";
+    
+    out += "width: " + this.width + ", height: " + this.height + ", numSpawns: " + this.numSpawns + "\n";
+    out += "spawnLocations:\n";
+    
+    for (Location loc : this.spawns) {
+      out += loc + "\n";
+    }
+    
+    for (Tile[] row : this.screen) {
+      for (Tile tile : row) {
+        out += tile.name + ", ";
+      }
+      out += "\n";
+    }
+    
+    return out;
   }
 }
