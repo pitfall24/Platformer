@@ -16,10 +16,7 @@ void setup() {
 
 void draw() {
   background(255, 255, 255);
-  
-  //rect((float) b1.xOrigin, (float) b1.yOrigin, (float) b1.width, (float) b1.height);
-  //rect((float) b2.xOrigin, (float) b2.yOrigin, (float) b2.width, (float) b2.height);
-  
+    
   b1.draw(this);
   b2.draw(this);
   

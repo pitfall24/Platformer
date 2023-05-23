@@ -16,11 +16,6 @@ public class Screen {
     this.name = name;
     this.screen = new Tile[height][width];
     
-    File dir = new File("C:/Users/326517/Platformer/Platformer/resources/worlds/screens");
-    for (File f : dir.listFiles()) {
-      System.out.println(f.getAbsolutePath());
-    }
-    
     this.loadScreen("C:/Users/326517/Platformer/Platformer/resources/worlds/screens/" + name + ".txt");
   }
   
@@ -38,20 +33,32 @@ public class Screen {
       Scanner sc = new Scanner(new File(path));
       
       assert(sc.nextLine().equals("name:" + this.name));
-      sc.nextLine();
       
       {
         String ln = sc.nextLine();
+
         this.numSpawns = Integer.parseInt(ln.substring(ln.indexOf(":") + 1));
         this.spawns = new Location[this.numSpawns];
       }
       
       for (int i = 0; i < this.numSpawns; i++) {
-        this.spawns[i] = new Location(sc.nextLine());
+        try {
+          this.spawns[i] = new Location(sc.nextLine());
+        } catch (Exception e) {
+          System.out.println("Number of given locations or their format does not match:");
+          System.out.println(e);
+        }
       }
       
-      for (Location l : this.spawns) {
-        System.out.println(l);
+      assert(sc.nextLine().equals("tiles:"));
+      for (int i = 0; i < this.height; i++) {
+        String ln = sc.nextLine();
+        for (int j = 0; j < this.width; j++) {
+          String next = ln.substring(0, ln.indexOf(","));
+          ln = ln.substring(next.length() + 2);
+          
+          this.screen[i][j] = new Tile(next, next + ".txt", true, false, j * 8, i * 8);
+        }
       }
       
       sc.close();
