@@ -1,9 +1,30 @@
 import java.util.ArrayList;
 
+public enum Direction {
+  UP        (0x1),
+  DOWN      (0x2),
+  LEFT      (0x4),
+  RIGHT     (0x8),
+  UPRIGHT   (0x10),
+  DOWNRIGHT (0x20),
+  UPLEFT    (0x40),
+  DOWNLEFT  (0x80);
+  
+  public final byte label;
+  
+  private Direction(int label) {
+    this.label = (byte) label;
+  }
+}
+
 public class Actor extends Body {
   int width, height;
 
   int facing;
+  
+  double timeOnGround;
+  double timeDashing;
+  double timeGrabbing;
 
   boolean onGround;
   boolean dashing;
@@ -17,6 +38,10 @@ public class Actor extends Body {
     this.height = height;
 
     this.facing = 0;
+    
+    this.timeOnGround = 0.0;
+    this.timeDashing = 0.0;
+    this.timeGrabbing = 0.0;
 
     this.onGround = true;
     this.dashing = false;

@@ -29,6 +29,4 @@ void draw() {
       b2.yOrigin = mouseY;
     }
   }
-  
-  System.out.println(b1.colliding(b2));
 }
