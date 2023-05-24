@@ -27,6 +27,8 @@ public class Tile {
     }
 
     this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
 
     this.hasHitbox = hasHitbox;
     this.canInteract = canInteract;
@@ -46,6 +48,8 @@ public class Tile {
     }
 
     this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
 
     this.hasHitbox = hasHitbox;
     this.canInteract = canInteract;
@@ -56,6 +60,8 @@ public class Tile {
     this.texture = texture;
 
     this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
 
     this.hasHitbox = hasHitbox;
     this.canInteract = canInteract;
@@ -71,28 +77,23 @@ public class Tile {
   
   public void draw(PApplet sketch) {
     if (this.texture == null) { return; }
-    
+     //<>//
     int mode = sketch.getGraphics().rectMode;
     sketch.rectMode(PConstants.CORNER);
+    sketch.noStroke();
     
     float pixelW;
     float pixelH;
     
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
+        sketch.fill(this.texture.redTexture[j][i], this.texture.greenTexture[j][i], this.texture.blueTexture[j][i], this.texture.alphaTexture[j][i]);
+        
         /* Make a better way to do this besides hardcoding it */
         pixelW = (float) sketch.width / (8.0 * 40.0);
         pixelH = (float) sketch.height / (8.0 * 22.0);
                 
-        sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - j * pixelH - this.yPosition * pixelH, pixelW, pixelH);
-        println("rect drawn at (" + (i * pixelW + this.xPosition * pixelW) + ", " + (sketch.height - j * pixelH - this.yPosition * pixelH) + ")");
-        /*
-        int mode = sketch.getGraphics().rectMode;
-        
-        sketch.rectMode(PConstants.CENTER);
-        sketch.rect((float) this.xOrigin, (float) this.yOrigin, (float) this.width, (float) this.height);
-        sketch.rectMode(mode);
-        */
+        sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
       }
     }
     

@@ -3,6 +3,9 @@ Screen spawn;
 Body b1;
 Body b2;
 
+PGraphics t;
+int a;
+
 void setup() {
   size(600, 400);
   
