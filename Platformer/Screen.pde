@@ -86,4 +86,14 @@ public class Screen {
     
     return out;
   }
+  
+  public void draw(PApplet sketch) {
+    int numDrawn = 0;
+    
+    for (Tile[] row : this.screen) {
+      for (Tile tile : row) {
+        tile.draw(sketch);
+      }
+    }
+  }
 }

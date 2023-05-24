@@ -68,4 +68,38 @@ public class Tile {
   public String toString() {
     return this.texture.toString();
   }
+  
+  public void draw(PApplet sketch) {
+    if (this.texture == null) { return; }
+    
+    int mode = sketch.getGraphics().rectMode;
+    sketch.rectMode(PConstants.CORNER);
+    
+    float pixelW;
+    float pixelH;
+    
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        /* Make a better way to do this besides hardcoding it */
+        pixelW = (float) sketch.width / (8.0 * 40.0);
+        pixelH = (float) sketch.height / (8.0 * 22.0);
+                
+        sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - j * pixelH - this.yPosition * pixelH, pixelW, pixelH);
+        println("rect drawn at (" + (i * pixelW + this.xPosition * pixelW) + ", " + (sketch.height - j * pixelH - this.yPosition * pixelH) + ")");
+        /*
+        int mode = sketch.getGraphics().rectMode;
+        
+        sketch.rectMode(PConstants.CENTER);
+        sketch.rect((float) this.xOrigin, (float) this.yOrigin, (float) this.width, (float) this.height);
+        sketch.rectMode(mode);
+        */
+      }
+    }
+    
+    sketch.rectMode(mode);
+  }
+  
+  public void drawHitbox(PApplet sketch) {
+    if (!this.hasHitbox) { return; }
+  }
 }

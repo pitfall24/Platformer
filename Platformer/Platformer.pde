@@ -20,6 +20,8 @@ void draw() {
   b1.draw(this);
   b2.draw(this);
   
+  spawn.draw(this);
+    
   if (mousePressed) {
     if (mouseButton == LEFT) {
       b1.xOrigin = mouseX;

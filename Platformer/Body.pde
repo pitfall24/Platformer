@@ -1,6 +1,3 @@
-import processing.core.PApplet;
-import processing.core.PConstants;
-
 public class Body {
   int width, height;
   double xOrigin, yOrigin;
