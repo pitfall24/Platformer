@@ -1,4 +1,4 @@
-import java.io.ObjectInputStream;
+import java.io.ObjectInputStream; //<>//
 import java.io.FileInputStream;
 import java.util.HashMap;
 
@@ -68,39 +68,47 @@ public class Tile {
 
     if (!loaded.containsKey(this.name)) {
       loaded.put(this.name, this.texture);
-    }  
+    }
   }
 
   public String toString() {
     return this.texture.toString();
   }
-  
+
   public void draw(PApplet sketch) {
-    if (this.texture == null) { return; }
-     //<>//
+    if (this.texture == null) {
+      return;
+    }
+
     int mode = sketch.getGraphics().rectMode;
     sketch.rectMode(PConstants.CORNER);
     sketch.noStroke();
-    
+
     float pixelW;
     float pixelH;
-    
+
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
-        sketch.fill(this.texture.redTexture[j][i], this.texture.greenTexture[j][i], this.texture.blueTexture[j][i], this.texture.alphaTexture[j][i]);
-        
+        this.setSketchColor(sketch, i, j);
+
         /* Make a better way to do this besides hardcoding it */
         pixelW = (float) sketch.width / (8.0 * 40.0);
         pixelH = (float) sketch.height / (8.0 * 22.0);
-                
+
         sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
       }
     }
-    
+
     sketch.rectMode(mode);
   }
-  
+
   public void drawHitbox(PApplet sketch) {
-    if (!this.hasHitbox) { return; }
+    if (!this.hasHitbox) {
+      return;
+    }
+  }
+
+  public void setSketchColor(PApplet sketch, int i, int j) {
+    sketch.fill(this.texture.redTexture[j][i] + 128, this.texture.greenTexture[j][i] + 128, this.texture.blueTexture[j][i] + 128, this.texture.alphaTexture[j][i] + 128);
   }
 }

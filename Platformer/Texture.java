@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.util.Scanner;
 import java.io.File;
+import processing.core.PApplet;
 
 public class Texture implements Serializable {
   String name;

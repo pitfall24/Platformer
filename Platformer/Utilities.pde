@@ -77,3 +77,13 @@ public Screen parseScreen(File screen, String name) throws Exception {
 
   return out;
 }
+
+public String absoluteRepoPath() {
+  String os = System.getProperty("os.name");
+  
+  if (os.equals("Windows 10")) {
+    return "C:/Users/326517/Platformer/Platformer/";
+  } else {
+    return "Users/phineas/Documents/Java/Platformer/";
+  }
+}
