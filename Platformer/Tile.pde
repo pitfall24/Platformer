@@ -75,7 +75,7 @@ public class Tile {
     return this.texture.toString();
   }
 
-  public void draw(PApplet sketch) {
+  public void draw(PApplet sketch, int tilesWide, int tilesTall) {
     if (this.texture == null) {
       return;
     }
@@ -84,9 +84,8 @@ public class Tile {
     sketch.rectMode(PConstants.CORNER);
     sketch.noStroke();
     
-    /* Make a better way to do this besides hardcoding it */
-    float pixelW = (float) sketch.width / (8.0 * 40.0);
-    float pixelH = (float) sketch.height / (8.0 * 22.0);
+    float pixelW = (float) sketch.width / (8.0 * tilesWide);
+    float pixelH = (float) sketch.height / (8.0 * tilesTall);
 
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {

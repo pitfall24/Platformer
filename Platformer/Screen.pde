@@ -91,7 +91,7 @@ public class Screen {
   public void draw(PApplet sketch) {
     for (Tile[] row : this.screen) {
       for (Tile tile : row) {
-        tile.draw(sketch);
+        tile.draw(sketch, this.width, this.height);
       }
     }
   }
