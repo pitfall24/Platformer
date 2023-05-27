@@ -83,18 +83,14 @@ public class Tile {
     int mode = sketch.getGraphics().rectMode;
     sketch.rectMode(PConstants.CORNER);
     sketch.noStroke();
-
-    float pixelW;
-    float pixelH;
+    
+    /* Make a better way to do this besides hardcoding it */
+    float pixelW = (float) sketch.width / (8.0 * 40.0);
+    float pixelH = (float) sketch.height / (8.0 * 22.0);
 
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         this.setSketchColor(sketch, i, j);
-
-        /* Make a better way to do this besides hardcoding it */
-        pixelW = (float) sketch.width / (8.0 * 40.0);
-        pixelH = (float) sketch.height / (8.0 * 22.0);
-
         sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
       }
     }
@@ -102,10 +98,12 @@ public class Tile {
     sketch.rectMode(mode);
   }
 
-  public void drawHitbox(PApplet sketch) {
+  public void drawHitbox(PApplet sketch, int tilesWide, int tilesTall) {
     if (!this.hasHitbox) {
       return;
     }
+    
+    this.hitbox.drawHitbox(sketch, tilesWide, tilesTall);
   }
 
   public void setSketchColor(PApplet sketch, int i, int j) {

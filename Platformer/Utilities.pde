@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.Scanner;
 
 public void refreshTileBinaries() throws Exception {
-  File targetDir = new File("C:/Users/326517/Platformer/Platformer/resources/textures/bin");
-  File sourceDir = new File("C:/Users/326517/Platformer/Platformer/resources/textures/tiles");
+  File targetDir = new File(absoluteRepoPath() + "/resources/textures/bin");
+  File sourceDir = new File(absoluteRepoPath() + "/resources/textures/tiles");
   
   cleanDir(targetDir, false);  
   createTileBinaries(sourceDir, targetDir);
@@ -84,6 +84,6 @@ public String absoluteRepoPath() {
   if (os.equals("Windows 10")) {
     return "C:/Users/326517/Platformer/Platformer/";
   } else {
-    return "Users/phineas/Documents/Java/Platformer/";
+    return "/Users/phineas/Documents/Java/Platformer/";
   }
 }

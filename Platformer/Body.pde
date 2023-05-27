@@ -76,7 +76,44 @@ public class Body {
     int mode = sketch.getGraphics().rectMode;
     
     sketch.rectMode(PConstants.CENTER);
-    sketch.rect((float) this.xOrigin, (float) this.yOrigin, (float) this.width, (float) this.height);
+    sketch.rect((float) this.xOrigin, (float) (sketch.height - this.yOrigin), (float) this.width, (float) this.height);
+    sketch.rectMode(mode);
+  }
+  
+  public void drawHitbox(PApplet sketch, int tilesWide, int tilesTall) {
+    float pixelW = (float) sketch.width / (this.width * tilesWide);
+    float pixelH = (float) sketch.height / (this.height * tilesTall);
+    float boxWidth = min(pixelW, pixelH);
+    
+    int mode = sketch.getGraphics().rectMode;
+    color c = sketch.getGraphics().fillColor;
+    
+    sketch.rectMode(PConstants.CENTER);
+    sketch.stroke(0, 0, 255);
+    sketch.fill(0, 0, 0, 0);
+    sketch.strokeWeight(boxWidth);
+    
+    sketch.rect((float) this.xOrigin * pixelW, (float) (tilesTall * pixelH * 8.0 - this.yOrigin * pixelH), (float) this.width * boxWidth - boxWidth, (float) this.height * boxWidth - boxWidth);
+    
+    sketch.noStroke();
+    sketch.rectMode(mode);
+    sketch.fill(c);
+  }
+  
+  public void drawHitbox(PApplet sketch) {
+    float pixelW = max((float) this.width / 25.0, 3.0);
+    float pixelH = max((float) this.height / 25.0, 3.0);
+    float boxWidth = min(pixelW, pixelH);
+    
+    int mode = sketch.getGraphics().rectMode;
+    sketch.rectMode(PConstants.CENTER);
+    sketch.stroke(0, 0, 255);
+    sketch.fill(0, 0, 0, 0);
+    sketch.strokeWeight(boxWidth);
+    
+    sketch.rect((float) this.xOrigin, (float) (sketch.height - this.yOrigin), (float) this.width - boxWidth, (float) this.height - boxWidth);
+    
+    sketch.noStroke();
     sketch.rectMode(mode);
   }
 }

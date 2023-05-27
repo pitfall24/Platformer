@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Screen {
   final int height;
@@ -16,7 +17,7 @@ public class Screen {
     this.name = name;
     this.screen = new Tile[height][width];
     
-    this.loadScreen("C:/Users/326517/Platformer/Platformer/resources/worlds/screens/" + name + ".txt");
+    this.loadScreen(absoluteRepoPath() + "/resources/worlds/screens/" + name + ".txt");
   }
   
   public Screen(String name, String path) {
@@ -57,7 +58,7 @@ public class Screen {
           String next = ln.substring(0, ln.indexOf(","));
           ln = ln.substring(next.length() + 1);
           
-          this.screen[i][j] = new Tile(next, "C:/Users/326517/Platformer/Platformer/resources/textures/bin/" + next + ".bin", true, false, j * 8, i * 8);
+          this.screen[i][j] = new Tile(next, absoluteRepoPath() + "/resources/textures/bin/" + next + ".bin", true, false, j * 8, i * 8);
         }
       }
       
@@ -92,6 +93,20 @@ public class Screen {
       for (Tile tile : row) {
         tile.draw(sketch);
       }
+    }
+  }
+  
+  public void drawHitboxes(PApplet sketch) {
+    for (Tile[] row : this.screen) {
+      for (Tile tile : row) {
+        tile.drawHitbox(sketch, this.width, this.height);
+      }
+    }
+  }
+  
+  public void drawHitboxes(PApplet sketch, ArrayList<Pair<Integer, Integer>> tiles) {
+    for (Pair<Integer, Integer> point : tiles) {
+      this.screen[point.second][point.first].drawHitbox(sketch, this.width, this.height);
     }
   }
 }
