@@ -19,6 +19,21 @@ public class Body {
     this.xJerk = 0.0;
     this.yJerk = 0.0;
   }
+  
+  public Body(Body other) {
+    this.width = other.width;
+    this.height = other.height;
+
+    this.xOrigin = other.xOrigin;
+    this.yOrigin = other.yOrigin;
+
+    this.xVelocity = other.xVelocity;
+    this.yVelocity = other.yVelocity;
+    this.xAcceleration = other.xAcceleration;
+    this.yAcceleration = other.yAcceleration;
+    this.xJerk = other.xJerk;
+    this.yJerk = other.yJerk;
+  }
 
   public void move(double time) {
     // For decent jump curve thingy:
@@ -92,27 +107,33 @@ public class Body {
     return (int) Math.round(this.yOrigin);
   }
 
-  public int colliding(Body other) {
+  public boolean colliding(Body other) {
     if (this == other) {
-      return 0;
+      return false;
     }
     
     boolean xOverlap = this.xOrigin - this.width / 2 < other.xOrigin + other.width / 2 && this.xOrigin + this.width / 2 > other.xOrigin - other.width / 2;
     boolean yOverlap = this.yOrigin + this.height / 2 > other.yOrigin - other.height / 2 && this.yOrigin - this.height / 2 < other.yOrigin + other.height / 2;
 
-    if (xOverlap && yOverlap) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return xOverlap && yOverlap;
   }
   
-  public ArrayList<Pair<Body, Integer>> checkEntityCollisions(ArrayList<Body> bodies) {
-    ArrayList<Pair<Body, Integer>> out = new ArrayList<Pair<Body, Integer>>();
+  public ArrayList<Pair<Body, Direction>> checkEntityCollisions(ArrayList<Body> bodies) {
+    ArrayList<Pair<Body, Direction>> out = new ArrayList<Pair<Body, Direction>>();
 
     for (Body body : bodies) {
-      if (this.colliding(body) != 0) {
-        out.add(new Pair<Body, Integer>(body, this.colliding(body)));
+      if (this.colliding(body)) {
+        Direction dir;
+        
+        /*
+        Logic for which direction  the two bodies collided in.
+        e.g. Directions.LEFT means (other) `body` collided into the left side of `this`.
+        Figure out at some point
+        */
+        
+        
+        
+        out.add(new Pair<Body, Direction>(body, dir));
       }
     }
 
@@ -124,7 +145,7 @@ public class Body {
 
     while (deltaT > timeStep / 2) {
       this.move(timeStep);
-      ArrayList<Pair<Body, Integer>> collided = this.checkEntityCollisions(bodies);
+      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies);
       
       
       

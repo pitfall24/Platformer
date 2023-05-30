@@ -49,8 +49,26 @@ public class Actor extends Body {
     this.crouching = false;
   }
   
+  public Actor(Actor other) {
+    super((Body) other);
+    
+    this.width = other.width;
+    this.height = other.height;
+
+    this.facing = other.facing;
+    
+    this.timeOnGround = other.timeOnGround;
+    this.timeDashing = other.timeOnGround;
+    this.timeGrabbing = other.timeGrabbing;
+
+    this.onGround = other.onGround;
+    this.dashing = other.dashing;
+    this.grabbing = other.grabbing;
+    this.crouching = other.crouching;
+  }
+  
   public void blindUpdate(double deltaT) {
-    super.move(deltaT);
+    this.move(deltaT);
   }
   
   public void update(double deltaT, int steps, ArrayList<Body> bodies) {
@@ -59,7 +77,7 @@ public class Actor extends Body {
     while (deltaT > timeStep / 2) {
       this.move(timeStep);
 
-      ArrayList<Body> collided = this.checkEntityCollisions(bodies);
+      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies);
       
       deltaT -= timeStep;
     }
