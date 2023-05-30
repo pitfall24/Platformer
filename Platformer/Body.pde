@@ -37,6 +37,33 @@ public class Body {
     this.xAcceleration += this.xJerk * time;
     this.yAcceleration += this.yJerk * time;
   }
+  
+  public void unmove(double time) {
+    this.xAcceleration -= this.xJerk * time;
+    this.yAcceleration -= this.yJerk * time;
+
+    this.xVelocity -= (1.0 / 2.0) * this.xJerk * Math.pow(time, 2.0) + this.xAcceleration * time;
+    this.yVelocity -= (1.0 / 2.0) * this.yJerk * Math.pow(time, 2.0) + this.yAcceleration * time;
+    
+    this.xOrigin -= (1.0 / 6.0) * this.xJerk * Math.pow(time, 3.0)
+        + (1.0 / 2.0) * this.xAcceleration * Math.pow(time, 2.0) + this.xVelocity * time;
+    this.yOrigin -= (1.0 / 6.0) * this.yJerk * Math.pow(time, 3.0)
+        + (1.0 / 2.0) * this.yAcceleration * Math.pow(time, 2.0) + this.yVelocity * time;
+  }
+  
+  public void unmoveX(double time) {
+    this.xAcceleration -= this.xJerk * time;
+    this.xVelocity -= (1.0 / 2.0) * this.xJerk * Math.pow(time, 2.0) + this.xAcceleration * time;
+    this.xOrigin -= (1.0 / 6.0) * this.xJerk * Math.pow(time, 3.0)
+        + (1.0 / 2.0) * this.xAcceleration * Math.pow(time, 2.0) + this.xVelocity * time;
+  }
+  
+  public void unmoveY(double time) {
+    this.yAcceleration -= this.yJerk * time;
+    this.yVelocity -= (1.0 / 2.0) * this.yJerk * Math.pow(time, 2.0) + this.yAcceleration * time;
+    this.yOrigin -= (1.0 / 6.0) * this.yJerk * Math.pow(time, 3.0)
+        + (1.0 / 2.0) * this.yAcceleration * Math.pow(time, 2.0) + this.yVelocity * time;
+  }
 
   public void setPosition(double xDest, double yDest) {
     this.xOrigin = xDest;
@@ -65,11 +92,44 @@ public class Body {
     return (int) Math.round(this.yOrigin);
   }
 
-  public boolean colliding(Body other) {
+  public int colliding(Body other) {
+    if (this == other) {
+      return 0;
+    }
+    
     boolean xOverlap = this.xOrigin - this.width / 2 < other.xOrigin + other.width / 2 && this.xOrigin + this.width / 2 > other.xOrigin - other.width / 2;
     boolean yOverlap = this.yOrigin + this.height / 2 > other.yOrigin - other.height / 2 && this.yOrigin - this.height / 2 < other.yOrigin + other.height / 2;
 
-    return xOverlap && yOverlap;
+    if (xOverlap && yOverlap) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+  
+  public ArrayList<Pair<Body, Integer>> checkEntityCollisions(ArrayList<Body> bodies) {
+    ArrayList<Pair<Body, Integer>> out = new ArrayList<Pair<Body, Integer>>();
+
+    for (Body body : bodies) {
+      if (this.colliding(body) != 0) {
+        out.add(new Pair<Body, Integer>(body, this.colliding(body)));
+      }
+    }
+
+    return out;
+  }
+  
+  public void update(double deltaT, int steps, ArrayList<Body> bodies) {
+    double timeStep = deltaT / steps;
+
+    while (deltaT > timeStep / 2) {
+      this.move(timeStep);
+      ArrayList<Pair<Body, Integer>> collided = this.checkEntityCollisions(bodies);
+      
+      
+      
+      deltaT -= timeStep;
+    }
   }
 
   public void draw(PApplet sketch) {
@@ -80,11 +140,22 @@ public class Body {
     sketch.rectMode(mode);
   }
   
-  public void drawHitbox(PApplet sketch, int tilesWide, int tilesTall) {
-    float pixelW = (float) sketch.width / (this.width * tilesWide);
-    float pixelH = (float) sketch.height / (this.height * tilesTall);
-    float boxWidth = min(pixelW, pixelH);
+  public void draw(PApplet sketch, int tilesWide, int tilesTall) {
+    float pixelW = (float) sketch.width / (8.0 * tilesWide);
+    float pixelH = (float) sketch.height / (8.0 * tilesTall);
     
+    int mode = sketch.getGraphics().rectMode;
+    
+    sketch.rectMode(PConstants.CENTER);
+    sketch.rect((float) (this.xOrigin * pixelW), (float) (sketch.height - this.yOrigin * pixelH), (float) (this.width * pixelW), (float) (this.height * pixelH));
+    sketch.rectMode(mode);
+  }
+  
+  public void drawHitbox(PApplet sketch, int tilesWide, int tilesTall) {
+    float pixelW = (float) sketch.width / (8.0 * tilesWide);
+    float pixelH = (float) sketch.height / (8.0 * tilesTall);
+    float boxWidth = min(pixelW, pixelH);
+        
     int mode = sketch.getGraphics().rectMode;
     color c = sketch.getGraphics().fillColor;
     

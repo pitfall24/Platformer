@@ -48,27 +48,11 @@ public class Actor extends Body {
     this.grabbing = false;
     this.crouching = false;
   }
-
-  public void move(double time) {
-    super.move(time);
-  }
-
-  public ArrayList<Body> checkEntityCollisions(ArrayList<Body> bodies) {
-    ArrayList<Body> out = new ArrayList<Body>();
-
-    for (Body body : bodies) {
-      if (this.colliding(body)) {
-        out.add(body);
-      }
-    }
-
-    return out;
-  }
   
   public void blindUpdate(double deltaT) {
     super.move(deltaT);
   }
-
+  
   public void update(double deltaT, int steps, ArrayList<Body> bodies) {
     double timeStep = deltaT / steps;
 
@@ -76,6 +60,8 @@ public class Actor extends Body {
       this.move(timeStep);
 
       ArrayList<Body> collided = this.checkEntityCollisions(bodies);
+      
+      deltaT -= timeStep;
     }
   }
 }

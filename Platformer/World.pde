@@ -2,10 +2,14 @@ import java.io.File;
 
 public class World {
     Tree<Screen> world;
+    Screen currentlyOn;
     Actor player;
 
-    public World() {
-        this.world = new Tree<Screen>();
+    public World(Screen start) {
+        this.world = new Tree<Screen>(start);
+        this.currentlyOn = start;
+        
+        this.player = new Actor(8, 10, start.spawns[0].xPos, start.spawns[0].yPos);
     }
 
     public World(String directory) {
