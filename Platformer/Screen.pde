@@ -89,11 +89,17 @@ public class Screen {
   }
   
   public void draw(PApplet sketch) {
+    int mode = sketch.getGraphics().rectMode;
+    sketch.rectMode(PConstants.CORNER);
+    sketch.noStroke();
+    
     for (Tile[] row : this.screen) {
       for (Tile tile : row) {
-        tile.draw(sketch, this.width, this.height);
+        tile._draw(sketch, this.width, this.height);
       }
     }
+    
+    sketch.rectMode(mode);
   }
   
   public void drawHitboxes(PApplet sketch) {

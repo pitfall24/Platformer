@@ -96,6 +96,22 @@ public class Tile {
 
     sketch.rectMode(mode);
   }
+  
+  public void _draw(PApplet sketch, int tilesWide, int tilesTall) {
+    if (this.texture == null) {
+      return;
+    }
+    
+    float pixelW = (float) sketch.width / (8.0 * tilesWide);
+    float pixelH = (float) sketch.height / (8.0 * tilesTall);
+
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        this.setSketchColor(sketch, i, j);
+        sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
+      }
+    }
+  }
 
   public void drawHitbox(PApplet sketch, int tilesWide, int tilesTall) {
     if (!this.hasHitbox) {

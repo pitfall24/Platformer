@@ -123,7 +123,7 @@ public class Body {
 
     for (Body body : bodies) {
       if (this.colliding(body)) {
-        Direction dir;
+        Direction dir = Direction.UP;
         
         /*
         Logic for which direction  the two bodies collided in.
