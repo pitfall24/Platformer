@@ -118,20 +118,58 @@ public class Body {
     return xOverlap && yOverlap;
   }
   
-  public ArrayList<Pair<Body, Direction>> checkEntityCollisions(ArrayList<Body> bodies) {
+  public ArrayList<Pair<Body, Direction>> checkEntityCollisions(ArrayList<Body> bodies, double deltaT) {
     ArrayList<Pair<Body, Direction>> out = new ArrayList<Pair<Body, Direction>>();
-
+    
+    Body copy = new Body(this);
+    copy.unmove(deltaT);
+    
     for (Body body : bodies) {
       if (this.colliding(body)) {
-        Direction dir = Direction.UP;
-        
+        Direction dir = Direction.UP; // default to moving up;
         /*
         Logic for which direction  the two bodies collided in.
         e.g. Directions.LEFT means (other) `body` collided into the left side of `this`.
-        Figure out at some point
+        If returned direction is for example UP, we move `this` up
         */
+        Body copyB = new Body(body);
+        copyB.unmove(deltaT);
         
+        double relX = body.xOrigin - copyB.xOrigin - (this.xOrigin - copy.xOrigin);
+        double relY = body.yOrigin - copyB.yOrigin - (this.yOrigin - copy.yOrigin);
         
+        println("relX=" + relX + ", relY=" + relY);
+        
+        if (abs(abs((float) relX) - abs((float) relY)) <= max((this.width + this.height) / 2.0, (body.width + body.height) / 2.0)) {
+          // diagonally move to corner
+          if (relX >= 0) {
+            if (relY >= 0) {
+              dir = Direction.UPRIGHT;
+            } else {
+              dir = Direction.DOWNRIGHT;
+            }
+          } else {
+            if (relY >= 0) {
+              dir = Direction.UPLEFT;
+            } else {
+              dir = Direction.DOWNLEFT;
+            }
+          }
+        } else if (abs((float) relX) > abs((float) relY)) {
+          // move left/right
+          if (relX >= 0) {
+            dir = Direction.RIGHT;
+          } else {
+            dir = Direction.LEFT;
+          }
+        } else {
+          // move up/down
+          if (relY >= 0) {
+            dir = Direction.UP;
+          } else {
+            dir = Direction.DOWN;
+          }
+        }
         
         out.add(new Pair<Body, Direction>(body, dir));
       }
@@ -145,9 +183,127 @@ public class Body {
 
     while (deltaT > timeStep / 2) {
       this.move(timeStep);
-      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies);
+      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies, deltaT);
       
-      
+      if (collided.size() != 0) {
+        println("not equal to zero");
+        // handle collision
+        for (Pair<Body, Direction> body : collided) {
+          switch (body.second) {
+            case UP: {
+              println("case UP");
+              if (this.yOrigin < body.first.yOrigin) {
+                this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
+              }
+              this.yVelocity = 0.0;
+              this.yAcceleration = 0.0;
+              this.yJerk = 0.0;
+              
+              break;
+            }
+            case DOWN: {
+              if (this.yOrigin > body.first.yOrigin) {
+                this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
+              }
+              this.yVelocity = 0.0;
+              this.yAcceleration = 0.0;
+              this.yJerk = 0.0;
+              
+              break;
+            }
+            case LEFT: {
+              if (this.xOrigin < body.first.xOrigin) {
+                this.xOrigin = body.first.xOrigin + (this.width + body.first.width) / 2.0;
+              }
+              this.xVelocity = 0.0;
+              this.xAcceleration = 0.0;
+              this.xJerk = 0.0;
+              
+              break;
+            }
+            case RIGHT: {
+              if (this.xOrigin > body.first.xOrigin) {
+                this.xOrigin = body.first.xOrigin - (this.width + body.first.width) / 2.0;
+              }
+              this.xVelocity = 0.0;
+              this.xAcceleration = 0.0;
+              this.xJerk = 0.0;
+              
+              break;
+            }
+            case UPRIGHT: {
+              if (this.yOrigin < body.first.yOrigin) {
+                this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
+              }
+              if (this.xOrigin > body.first.xOrigin) {
+                this.xOrigin = body.first.xOrigin - (this.width + body.first.width) / 2.0;
+              }
+              this.xVelocity = 0.0;
+              this.xAcceleration = 0.0;
+              this.xJerk = 0.0;
+              
+              this.yVelocity = 0.0;
+              this.yAcceleration = 0.0;
+              this.yJerk = 0.0;
+              
+              break;
+            }
+            case UPLEFT: {
+              if (this.yOrigin < body.first.yOrigin) {
+                this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
+              }
+              if (this.xOrigin < body.first.xOrigin) {
+                this.xOrigin = body.first.xOrigin + (this.width + body.first.width) / 2.0;
+              }
+              this.xVelocity = 0.0;
+              this.xAcceleration = 0.0;
+              this.xJerk = 0.0;
+              
+              this.yVelocity = 0.0;
+              this.yAcceleration = 0.0;
+              this.yJerk = 0.0;
+              
+              break;
+            }
+            case DOWNRIGHT: {
+              if (this.yOrigin > body.first.yOrigin) {
+                this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
+              }
+              if (this.xOrigin > body.first.xOrigin) {
+                this.xOrigin = body.first.xOrigin - (this.width + body.first.width) / 2.0;
+              }
+              this.xVelocity = 0.0;
+              this.xAcceleration = 0.0;
+              this.xJerk = 0.0;
+              
+              this.yVelocity = 0.0;
+              this.yAcceleration = 0.0;
+              this.yJerk = 0.0;
+              
+              break;
+            }
+            case DOWNLEFT: {
+              if (this.yOrigin > body.first.yOrigin) {
+                this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
+              }
+              if (this.xOrigin < body.first.xOrigin) {
+                this.xOrigin = body.first.xOrigin + (this.width + body.first.width) / 2.0;
+              }
+              this.xVelocity = 0.0;
+              this.xAcceleration = 0.0;
+              this.xJerk = 0.0;
+              
+              this.yVelocity = 0.0;
+              this.yAcceleration = 0.0;
+              this.yJerk = 0.0;
+              
+              break;
+            }
+          }
+        }
+        
+        break;
+      }
       
       deltaT -= timeStep;
     }

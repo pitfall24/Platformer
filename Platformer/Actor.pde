@@ -76,8 +76,7 @@ public class Actor extends Body {
 
     while (deltaT > timeStep / 2) {
       this.move(timeStep);
-
-      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies);
+      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies, deltaT);
       
       deltaT -= timeStep;
     }

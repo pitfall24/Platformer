@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 Screen spawn;
 
 Body b1;
@@ -10,8 +12,8 @@ void setup() {
   
   spawn = new Screen("spawn");
   
-  b1 = new Body(80, 100, 90, 120);
-  b2 = new Body(8, 10, 50, 150);
+  b1 = new Body(80, 100, 300, 120);
+  b2 = new Body(80, 100, 50, 150);
   
   b1.yAcceleration = -9.81;
   b1.yJerk = -1;
@@ -35,7 +37,7 @@ void draw() {
     }
   }
   
-  b1.move(1.0 / 60.0);
+  b1.update(1.0 / 60.0, 5, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })));
   
   println(frameRate);
 }
