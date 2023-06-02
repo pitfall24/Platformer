@@ -6,6 +6,7 @@ Body b1;
 Body b2;
 
 void setup() {
+  frameRate(30);
   size(960, 528);
   
   rectMode(CENTER);
@@ -21,6 +22,8 @@ void setup() {
 
 void draw() {
   background(255, 255, 255);
+  
+  b1.yJerk = -5;
   
   spawn.draw(this);
   

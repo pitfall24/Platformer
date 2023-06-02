@@ -118,6 +118,13 @@ public class Body {
     return xOverlap && yOverlap;
   }
   
+  public boolean diagonalMoveRequired(Body thisCopy, Body other, Body otherCopy) {
+    double relX = other.xOrigin - otherCopy.xOrigin - (this.xOrigin - thisCopy.xOrigin);
+    double relY = other.yOrigin - otherCopy.yOrigin - (this.yOrigin - thisCopy.yOrigin);
+    
+    return false;
+  }
+  
   public ArrayList<Pair<Body, Direction>> checkEntityCollisions(ArrayList<Body> bodies, double deltaT) {
     ArrayList<Pair<Body, Direction>> out = new ArrayList<Pair<Body, Direction>>();
     
@@ -132,6 +139,7 @@ public class Body {
         e.g. Directions.LEFT means (other) `body` collided into the left side of `this`.
         If returned direction is for example UP, we move `this` up
         */
+        
         Body copyB = new Body(body);
         copyB.unmove(deltaT);
         
@@ -139,9 +147,9 @@ public class Body {
         double relY = body.yOrigin - copyB.yOrigin - (this.yOrigin - copy.yOrigin);
         
         println("relX=" + relX + ", relY=" + relY);
-        
-        if (abs(abs((float) relX) - abs((float) relY)) <= max((this.width + this.height) / 2.0, (body.width + body.height) / 2.0)) {
-          // diagonally move to corner
+        if (diagonalMoveRequired(copy, body, copyB)) {
+          // diagonally move to a corner
+          println("diagonal move required");
           if (relX >= 0) {
             if (relY >= 0) {
               dir = Direction.UPRIGHT;
@@ -157,12 +165,14 @@ public class Body {
           }
         } else if (abs((float) relX) > abs((float) relY)) {
           // move left/right
+          println("left/right move");
           if (relX >= 0) {
             dir = Direction.RIGHT;
           } else {
             dir = Direction.LEFT;
           }
         } else {
+          println("up/down move");
           // move up/down
           if (relY >= 0) {
             dir = Direction.UP;
@@ -171,6 +181,7 @@ public class Body {
           }
         }
         
+        println("dir=" + dir);
         out.add(new Pair<Body, Direction>(body, dir));
       }
     }
@@ -186,7 +197,7 @@ public class Body {
       ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies, deltaT);
       
       if (collided.size() != 0) {
-        println("not equal to zero");
+        println("collision happened");
         // handle collision
         for (Pair<Body, Direction> body : collided) {
           switch (body.second) {
@@ -202,6 +213,7 @@ public class Body {
               break;
             }
             case DOWN: {
+              println("case DOWN");
               if (this.yOrigin > body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
               }
@@ -212,6 +224,7 @@ public class Body {
               break;
             }
             case LEFT: {
+              println("case LEFT");
               if (this.xOrigin < body.first.xOrigin) {
                 this.xOrigin = body.first.xOrigin + (this.width + body.first.width) / 2.0;
               }
@@ -222,6 +235,7 @@ public class Body {
               break;
             }
             case RIGHT: {
+              println("case RIGHT");
               if (this.xOrigin > body.first.xOrigin) {
                 this.xOrigin = body.first.xOrigin - (this.width + body.first.width) / 2.0;
               }
@@ -232,11 +246,14 @@ public class Body {
               break;
             }
             case UPRIGHT: {
-              if (this.yOrigin < body.first.yOrigin) {
+              println("case UPRIGHT");
+              if (this.yOrigin - this.height / 2.0 < body.first.yOrigin + body.first.height / 2.0) {
+                println("first if");
                 this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
               }
-              if (this.xOrigin > body.first.xOrigin) {
-                this.xOrigin = body.first.xOrigin - (this.width + body.first.width) / 2.0;
+              if (this.xOrigin - this.width / 2.0 > body.first.xOrigin + body.first.width / 2.0) {
+                println("second if");
+                this.xOrigin = body.first.xOrigin + (this.width + body.first.width) / 2.0;
               }
               this.xVelocity = 0.0;
               this.xAcceleration = 0.0;
@@ -249,6 +266,7 @@ public class Body {
               break;
             }
             case UPLEFT: {
+              println("case UPLEFT");
               if (this.yOrigin < body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
               }
@@ -266,6 +284,7 @@ public class Body {
               break;
             }
             case DOWNRIGHT: {
+              println("case DOWNRIGHT");
               if (this.yOrigin > body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
               }
@@ -283,6 +302,7 @@ public class Body {
               break;
             }
             case DOWNLEFT: {
+              println("case DOWNLEFT");
               if (this.yOrigin > body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
               }
