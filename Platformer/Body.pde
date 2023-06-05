@@ -119,8 +119,7 @@ public class Body {
   }
   
   public boolean diagonalMoveRequired(Body thisCopy, Body other, Body otherCopy) {
-    double relX = other.xOrigin - otherCopy.xOrigin - (this.xOrigin - thisCopy.xOrigin);
-    double relY = other.yOrigin - otherCopy.yOrigin - (this.yOrigin - thisCopy.yOrigin);
+    // Always return false for now
     
     return false;
   }
@@ -137,19 +136,18 @@ public class Body {
         /*
         Logic for which direction  the two bodies collided in.
         e.g. Directions.LEFT means (other) `body` collided into the left side of `this`.
-        If returned direction is for example UP, we move `this` up
+        If returned direction is for example UP, we move `this` down
         */
         
         Body copyB = new Body(body);
         copyB.unmove(deltaT);
         
-        double relX = body.xOrigin - copyB.xOrigin - (this.xOrigin - copy.xOrigin);
-        double relY = body.yOrigin - copyB.yOrigin - (this.yOrigin - copy.yOrigin);
+        double relX = -(body.xOrigin - copyB.xOrigin - (this.xOrigin - copy.xOrigin));
+        double relY = -(body.yOrigin - copyB.yOrigin - (this.yOrigin - copy.yOrigin));
         
-        println("relX=" + relX + ", relY=" + relY);
         if (diagonalMoveRequired(copy, body, copyB)) {
           // diagonally move to a corner
-          println("diagonal move required");
+          // will never happen for now
           if (relX >= 0) {
             if (relY >= 0) {
               dir = Direction.UPRIGHT;
@@ -163,21 +161,23 @@ public class Body {
               dir = Direction.DOWNLEFT;
             }
           }
-        } else if (abs((float) relX) > abs((float) relY)) {
-          // move left/right
-          println("left/right move");
-          if (relX >= 0) {
-            dir = Direction.RIGHT;
-          } else {
-            dir = Direction.LEFT;
-          }
         } else {
-          println("up/down move");
-          // move up/down
-          if (relY >= 0) {
-            dir = Direction.UP;
+          double rightDot = dot(relX, 0, this.width, this.height);
+          double upDot = dot(0, relY, this.width, this.height);
+          
+          // todo: figure out which direction to move this for all these cases
+          if (relX >= 0) {
+            if (relY >= 0) {
+              // body is moving upright (compared to this)
+            } else {
+              // body is moving downright (compared to this)
+            }
           } else {
-            dir = Direction.DOWN;
+            if (relY >= 0) {
+              // body is moving upleft (compared to this)
+            } else {
+              // body if moving downleft (compared to this)
+            }
           }
         }
         
@@ -246,7 +246,6 @@ public class Body {
               break;
             }
             case UPRIGHT: {
-              println("case UPRIGHT");
               if (this.yOrigin - this.height / 2.0 < body.first.yOrigin + body.first.height / 2.0) {
                 println("first if");
                 this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
@@ -266,7 +265,6 @@ public class Body {
               break;
             }
             case UPLEFT: {
-              println("case UPLEFT");
               if (this.yOrigin < body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
               }
@@ -284,7 +282,6 @@ public class Body {
               break;
             }
             case DOWNRIGHT: {
-              println("case DOWNRIGHT");
               if (this.yOrigin > body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
               }
@@ -302,7 +299,6 @@ public class Body {
               break;
             }
             case DOWNLEFT: {
-              println("case DOWNLEFT");
               if (this.yOrigin > body.first.yOrigin) {
                 this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
               }
