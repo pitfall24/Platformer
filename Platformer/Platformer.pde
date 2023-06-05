@@ -16,14 +16,15 @@ void setup() {
   b1 = new Body(80, 100, 300, 120);
   b2 = new Body(80, 100, 50, 150);
   
-  b1.yAcceleration = -9.81;
-  b1.yJerk = -1;
+  b1.yJerk = -5;
+  b1.xJerk = 2;
 }
 
 void draw() {
   background(255, 255, 255);
   
   b1.yJerk = -5;
+  b1.xJerk = 2;
   
   spawn.draw(this);
   
