@@ -96,7 +96,9 @@ public ArrayList<Body> getBodies(ArrayList<Tile> tiles) {
   ArrayList<Body> out = new ArrayList<Body>(tiles.size());
   
   for (Tile tile : tiles) {
-    out.add(tile.hitbox);
+    if (tile.hasHitbox) {
+      out.add(tile.hitbox);
+    }
   }
   
   return out;
@@ -106,7 +108,47 @@ public ArrayList<Body> getBodies(Pair<ArrayList<Tile>, ArrayList<Tile>> pairs) {
   ArrayList<Body> out = new ArrayList<Body>(pairs.first.size());
   
   for (Tile tile : pairs.first) {
-    out.add(tile.hitbox);
+    if (tile.hasHitbox) {
+      out.add(tile.hitbox);
+    }
+  }
+  
+  return out;
+}
+
+public ArrayList<Body> getBodies(PApplet sketch, ArrayList<Tile> tiles, int tilesWide, int tilesTall) {
+  ArrayList<Body> out = new ArrayList<Body>(tiles.size());
+  
+  for (Tile tile : tiles) {
+    if (tile.hasHitbox) {
+      Body newHitbox = new Body(tile.hitbox);
+      newHitbox.xOrigin *= (double) sketch.width / (tilesWide * 8.0);
+      newHitbox.yOrigin *= (double) sketch.height / (tilesTall * 8.0);
+      newHitbox.width *= (double) sketch.width / (tilesWide * 8.0);
+      newHitbox.height *= (double) sketch.height / (tilesTall * 8.0);
+      
+      println("width=" + newHitbox.width + ", height=" + newHitbox.height);
+      
+      out.add(newHitbox);
+    }
+  }
+  
+  return out;
+}
+
+public ArrayList<Body> getBodies(PApplet sketch, Pair<ArrayList<Tile>, ArrayList<Tile>> pairs, int tilesWide, int tilesTall) {
+  ArrayList<Body> out = new ArrayList<Body>(pairs.first.size());
+  
+  for (Tile tile : pairs.first) {
+    if (tile.hasHitbox) {
+      Body newHitbox = new Body(tile.hitbox);
+      newHitbox.xOrigin *= (double) sketch.width / (tilesWide * 8.0);
+      newHitbox.yOrigin *= (double) sketch.height / (tilesTall * 8.0);
+      newHitbox.width *= (double) sketch.width / (tilesWide * 8.0);
+      newHitbox.height *= (double) sketch.height / (tilesTall * 8.0);
+      
+      out.add(newHitbox);
+    }
   }
   
   return out;

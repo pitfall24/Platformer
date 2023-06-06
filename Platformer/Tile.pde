@@ -70,6 +70,18 @@ public class Tile {
       loaded.put(this.name, this.texture);
     }
   }
+  
+  public Tile(Tile other, int xPosition, int yPosition) {
+    this.name = other.name;
+    this.texture = other.texture;
+    
+    this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
+
+    this.hasHitbox = other.hasHitbox;
+    this.canInteract = other.canInteract;
+  }
 
   public String toString() {
     return this.texture.toString();
@@ -108,7 +120,7 @@ public class Tile {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         this.setSketchColor(sketch, i, j);
-        sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
+        sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
       }
     }
   }

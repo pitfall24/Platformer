@@ -17,10 +17,11 @@ void setup() {
   b2 = new Actor(80, 100, 250, 250);
 }
 
-void draw() {
+void draw() {  
   background(255, 255, 255);
   
   spawn.draw(this);
+  spawn.drawHitboxes(this);
   
   b1.draw(this);
   b2.draw(this);
@@ -44,7 +45,7 @@ void draw() {
   b1.update(1.0 / frameRate, 5, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })));
   b2.blindUpdate(1.0 / frameRate);
   
-  b1.update(1.0 / frameRate, 5, getBodies(spawn.exportTilesToBody()));
+  b1.update(1.0 / frameRate, 5, getBodies(this, spawn.exportTilesToBody(), spawn.width, spawn.height));
   
   println(frameRate);
 }

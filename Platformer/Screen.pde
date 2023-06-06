@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Screen {
   final int height;
@@ -74,6 +75,8 @@ public class Screen {
       
       {
         String ln = sc.nextLine();
+        
+        assert(ln.substring(0, ln.indexOf(":")).equals("locations"));
 
         this.numSpawns = Integer.parseInt(ln.substring(ln.indexOf(":") + 1));
         this.spawns = new Location[this.numSpawns];
@@ -88,14 +91,45 @@ public class Screen {
         }
       }
       
-      assert(sc.nextLine().equals("tiles:"));
+      int numTiles;
+      HashMap<String, Tile> tiles = new HashMap<String, Tile>();
+      {
+        String ln = sc.nextLine();
+        
+        assert(ln.substring(0, ln.indexOf(":")).equals("tiles"));
+        
+        numTiles = Integer.parseInt(ln.substring(ln.indexOf(":") + 1));
+      }
+      
+      for (int i = 0; i < numTiles; i++) {
+        String ln = sc.nextLine();
+        
+        String label = ln.substring(0, ln.indexOf(":"));
+        String name = ln.substring(ln.indexOf(":") + 1, ln.indexOf(";"));
+        String info = ln.substring(ln.indexOf(";") + 1);
+        
+        boolean hasHitbox = info.substring(0, info.indexOf(";")).equals("true");
+        boolean canInteract = info.substring(info.indexOf(";") + 1).equals("true;");
+                
+        if (tiles.containsKey(label)) {
+          throw new Exception("Redefinition of tile label `" + label + "`");
+        } else {
+          tiles.put(label, new Tile(name, absoluteRepoPath() + "/resources/textures/bin/" + name + ".bin", hasHitbox, canInteract, 0, 0));
+        }
+      }
+      
+      assert(sc.nextLine().equals("screen:"));
       for (int i = 0; i < this.height; i++) {
         String ln = sc.nextLine();
         for (int j = 0; j < this.width; j++) {
           String next = ln.substring(0, ln.indexOf(","));
           ln = ln.substring(next.length() + 1);
           
-          this.screen[i][j] = new Tile(next, absoluteRepoPath() + "/resources/textures/bin/" + next + ".bin", true, false, j * 8, i * 8);
+          if (!tiles.containsKey(next)) {
+            throw new Exception("tile label `" + next + "` used but never defined");
+          } else {
+            this.screen[i][j] = new Tile(tiles.get(next), j * 8, this.height * 8 - i * 8 - 8);
+          }
         }
       }
       
@@ -131,7 +165,7 @@ public class Screen {
     sketch.noStroke();
     
     for (Tile[] row : this.screen) {
-      for (Tile tile : row) {
+      for (Tile tile : row) { //<>//
         tile._draw(sketch, this.width, this.height);
       }
     }

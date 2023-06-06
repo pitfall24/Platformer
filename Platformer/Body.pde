@@ -323,7 +323,7 @@ public class Body {
     sketch.fill(0, 0, 0, 0);
     sketch.strokeWeight(boxWidth);
     
-    sketch.rect((float) this.xOrigin * pixelW, (float) (tilesTall * pixelH * 8.0 - this.yOrigin * pixelH), (float) this.width * boxWidth - boxWidth, (float) this.height * boxWidth - boxWidth);
+    sketch.rect((float) this.xOrigin * pixelW, (float) (sketch.height - this.yOrigin * pixelH), (float) this.width * boxWidth - boxWidth, (float) this.height * boxWidth - boxWidth);
     
     sketch.noStroke();
     sketch.rectMode(mode);
