@@ -91,3 +91,23 @@ public String absoluteRepoPath() {
 public double dot(double x1, double y1, double x2, double y2) {
   return x1 * x2 + y1 * y2;
 }
+
+public ArrayList<Body> getBodies(ArrayList<Tile> tiles) {
+  ArrayList<Body> out = new ArrayList<Body>(tiles.size());
+  
+  for (Tile tile : tiles) {
+    out.add(tile.hitbox);
+  }
+  
+  return out;
+}
+
+public ArrayList<Body> getBodies(Pair<ArrayList<Tile>, ArrayList<Tile>> pairs) {
+  ArrayList<Body> out = new ArrayList<Body>(pairs.first.size());
+  
+  for (Tile tile : pairs.first) {
+    out.add(tile.hitbox);
+  }
+  
+  return out;
+}

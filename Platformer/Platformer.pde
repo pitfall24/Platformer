@@ -44,6 +44,8 @@ void draw() {
   b1.update(1.0 / frameRate, 5, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })));
   b2.blindUpdate(1.0 / frameRate);
   
+  b1.update(1.0 / frameRate, 5, getBodies(spawn.exportTilesToBody()));
+  
   println(frameRate);
 }
 
