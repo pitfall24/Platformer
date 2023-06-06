@@ -72,13 +72,6 @@ public class Actor extends Body {
   }
   
   public void update(double deltaT, int steps, ArrayList<Body> bodies) {
-    double timeStep = deltaT / steps;
-
-    while (deltaT > timeStep / 2) {
-      this.move(timeStep);
-      ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies, deltaT);
-      
-      deltaT -= timeStep;
-    }
+    super.update(deltaT, steps, bodies);
   }
 }

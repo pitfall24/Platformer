@@ -228,7 +228,14 @@ public class Body {
     double timeStep = deltaT / steps;
     
     while (deltaT > timeStep / 2) {
-      this.move(timeStep);
+      this.step(timeStep, bodies);
+      
+      deltaT -= timeStep;
+    }
+  }
+  
+  public void step(double timeStep, ArrayList<Body> bodies) {
+    this.move(timeStep);
       ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(bodies, timeStep);
       
       if (collided.size() != 0) {
@@ -282,9 +289,6 @@ public class Body {
           }
         }
       }
-      
-      deltaT -= timeStep;
-    }
   }
 
   public void draw(PApplet sketch) {
