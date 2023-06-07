@@ -31,7 +31,7 @@ public class Texture implements Serializable {
   public void loadTexture(String filepath) {
     try {
       Scanner sc = new Scanner(new File(filepath));
-      
+
       assert(sc.nextLine().equals("redTexture:"));
       for (int i = 0; i < this.height; i++) {
         String line = sc.nextLine();

@@ -1,4 +1,4 @@
-import java.io.ObjectInputStream; //<>// //<>//
+import java.io.ObjectInputStream; //<>// //<>// //<>//
 import java.io.FileInputStream;
 import java.util.HashMap;
 
@@ -70,11 +70,11 @@ public class Tile {
       loaded.put(this.name, this.texture);
     }
   }
-  
+
   public Tile(Tile other, int xPosition, int yPosition) {
     this.name = other.name;
     this.texture = other.texture;
-    
+
     this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
     this.xPosition = xPosition;
     this.yPosition = yPosition;
@@ -95,7 +95,7 @@ public class Tile {
     int mode = sketch.getGraphics().rectMode;
     sketch.rectMode(PConstants.CORNER);
     sketch.noStroke();
-    
+
     float pixelW = (float) sketch.width / (8.0 * tilesWide);
     float pixelH = (float) sketch.height / (8.0 * tilesTall);
 
@@ -108,12 +108,12 @@ public class Tile {
 
     sketch.rectMode(mode);
   }
-  
+
   public void _draw(PApplet sketch, int tilesWide, int tilesTall) {
     if (this.texture == null) {
       return;
     }
-    
+
     float pixelW = (float) sketch.width / (8.0 * tilesWide);
     float pixelH = (float) sketch.height / (8.0 * tilesTall);
 
@@ -129,7 +129,7 @@ public class Tile {
     if (!this.hasHitbox) {
       return;
     }
-    
+
     this.hitbox.drawHitbox(sketch, tilesWide, tilesTall);
   }
 
