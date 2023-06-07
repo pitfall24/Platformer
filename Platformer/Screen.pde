@@ -1,4 +1,4 @@
-import java.io.File; //<>// //<>//
+import java.io.File; //<>//
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,43 +33,6 @@ public class Screen {
     this.screen = new Tile[height][width];
 
     this.loadScreen(path);
-  }
-
-  public ArrayList<Tile> exportTilesToBody() {
-    ArrayList<Tile> out = new ArrayList<Tile>(this.width * this.height);
-
-    for (Tile[] row : this.screen) {
-      for (Tile tile : row) {
-        if (tile.hasHitbox) {
-          out.add(tile);
-        }
-      }
-    }
-
-    out.trimToSize();
-    return out;
-  }
-
-  public Pair<ArrayList<Tile>, ArrayList<Tile>> exportTilesToActor() {
-    Pair<ArrayList<Tile>, ArrayList<Tile>> out = new Pair<ArrayList<Tile>, ArrayList<Tile>>();
-    out.first = new ArrayList<Tile>(this.width * this.height);
-    out.second = new ArrayList<Tile>(this.width * this.height);
-
-    for (Tile[] row : this.screen) {
-      for (Tile tile : row) {
-        if (tile.hasHitbox) {
-          out.first.add(tile);
-        }
-        if (tile.canInteract) {
-          out.second.add(tile);
-        }
-      }
-    }
-
-    out.first.trimToSize();
-    out.second.trimToSize();
-
-    return out;
   }
 
   public void loadScreen(String path) {
