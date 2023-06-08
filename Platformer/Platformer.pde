@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 Screen spawn;
 
-Body b1;
+Actor b1;
 Actor b2;
 
 void setup() {
@@ -16,8 +16,8 @@ void setup() {
   b1 = new Actor(80, 100, 100, 100);
   b2 = new Actor(80, 100, 250, 250);
   
-  try { spawn.writeScreen(absoluteRepoPath() + "resources/worlds/screens/test.txt"); } catch (Exception e) { e.printStackTrace(); }
-  exit();
+  //try { spawn.writeScreen(absoluteRepoPath() + "resources/worlds/screens/test.txt"); } catch (Exception e) { e.printStackTrace(); }
+  //exit();
 }
 
 void draw() {
@@ -29,7 +29,7 @@ void draw() {
   fill(255, 0, 0);
   noStroke();
   
-  b1.draw(this);
+  b1.draw(this, spawn.width, spawn.height);
   b2.draw(this);
 
   if (mousePressed) {
@@ -45,10 +45,10 @@ void draw() {
     }
   }
 
-  b1.update(this, 1.0 / frameRate, 5, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })), true);
+  b1.update(this, 1.0 / frameRate, 5, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })), false);
   b2.blindUpdate(1.0 / frameRate);
 
-  b1.update(this, 1.0 / frameRate, 5, spawn, false);
+  b1.update(this, 1.0 / frameRate, 5, spawn, true);
 
   println(frameRate);
 }

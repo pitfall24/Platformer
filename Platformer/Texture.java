@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.util.Scanner;
 import java.io.File;
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 public class Texture implements Serializable {
   String name;
@@ -26,6 +27,29 @@ public class Texture implements Serializable {
     this.alphaTexture = new byte[height][width];
 
     this.loadTexture(name);
+  }
+  
+  public void draw(PApplet sketch, int tilesWide, int tilesTall, double xPosition, double yPosition) {
+    sketch.pushStyle();
+    
+    sketch.rectMode(PConstants.CORNER);
+    sketch.noStroke();
+
+    float pixelW = (float) (sketch.width / (8.0 * tilesWide));
+    float pixelH = (float) (sketch.height / (8.0 * tilesTall));
+
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        this.setSketchColor(sketch, i, j);
+        sketch.rect((float) (i * pixelW + xPosition * pixelW), (float) (j * pixelH + yPosition * pixelH), pixelW, pixelH);
+      }
+    }
+
+    sketch.popStyle();
+  }
+  
+  public void setSketchColor(PApplet sketch, int i, int j) {
+    sketch.fill(this.redTexture[j][i] + 128, this.greenTexture[j][i] + 128, this.blueTexture[j][i] + 128, this.alphaTexture[j][i] + 128);
   }
   
   public boolean equals(Object o) {

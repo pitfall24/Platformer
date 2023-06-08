@@ -30,6 +30,10 @@ public class Actor extends Body {
   boolean dashing;
   boolean grabbing;
   boolean crouching;
+  
+  Texture texture;
+  double textureX;
+  double textureY;
 
   public Actor(int width, int height, int xOrigin, int yOrigin) {
     super(width, height, xOrigin, yOrigin);
@@ -65,6 +69,12 @@ public class Actor extends Body {
     this.dashing = other.dashing;
     this.grabbing = other.grabbing;
     this.crouching = other.crouching;
+  }
+  
+  public void draw(PApplet sketch, int tilesWide, int tilesTall) {
+    super.draw(sketch, tilesWide, tilesTall);
+    
+    //this.texture.draw(sketch, tilesWide, tilesTall, this.xOrigin + this.textureX, this.yOrigin + this.textureY);
   }
 
   public void blindUpdate(double deltaT) {

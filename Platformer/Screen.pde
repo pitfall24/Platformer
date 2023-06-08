@@ -64,7 +64,7 @@ public class Screen {
       }
     }
     
-    
+    /*
     tiles.forEach((k, v) -> {
       println(k.name + ": " + v);
     });
@@ -72,7 +72,7 @@ public class Screen {
     ref.forEach((k, v) -> {
       println(k + ": " + v);
     });
-    
+    */
     
     File out = new File(path);
     if (!out.createNewFile()) {
@@ -99,7 +99,12 @@ public class Screen {
     writer.write("screen:\n");
     for (Tile[] row : this.screen) {
       for (Tile tile : row) {
-        writer.write(tiles.get(tile) + ",");
+        for (Map.Entry<Tile, String> entry : tiles.entrySet()) {
+          if (entry.getKey().equals(tile)) {
+            writer.write(entry.getValue() + ",");
+            break;
+          }
+        }
       }
       writer.write("\n");
     }
