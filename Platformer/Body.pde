@@ -1,4 +1,4 @@
-public class Body { //<>// //<>// //<>// //<>//
+public class Body { //<>// //<>//
   int width, height;
   double xOrigin, yOrigin;
   double xVelocity, yVelocity;
@@ -335,7 +335,7 @@ public class Body { //<>// //<>// //<>// //<>//
     ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(sketch, screen, timeStep, propToScreen);
 
     this.handleCollisions(sketch, collided, screen, propToScreen);
-  } //<>// //<>//
+  } //<>//
 
   public void handleCollisions(PApplet sketch, ArrayList<Pair<Body, Direction>> collided, Screen screen, boolean propToScreen) {
     if (collided.size() == 0) {

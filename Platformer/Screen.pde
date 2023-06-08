@@ -1,7 +1,9 @@
 import java.io.File; //<>//
+import java.io.FileWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Screen {
   final int height;
@@ -34,6 +36,76 @@ public class Screen {
 
     this.loadScreen(path);
   }
+  
+  public void writeScreen(String path) throws Exception {
+    assert(hasExtension(path, "txt"));
+    
+    HashMap<Tile, String> tiles = new HashMap<Tile, String>();
+    HashMap<String, Integer> ref = new HashMap<String, Integer>();
+    for (Tile[] row : this.screen) {
+      for (Tile tile : row) {
+        boolean found = false;
+        for (Map.Entry<Tile, String> entry : tiles.entrySet()) {
+          if (entry.getKey().equals(tile)) {
+            found = true;
+            break;
+          }
+        }
+        
+        if (!found) {
+          if (ref.containsKey(tile.name)) {
+            ref.put(tile.name, ref.get(tile.name) + 1);
+            tiles.put(tile, tile.name + ref.get(tile.name));
+          } else {
+            ref.put(tile.name, 1);
+            tiles.put(tile, tile.name);
+          }
+        }
+      }
+    }
+    
+    
+    tiles.forEach((k, v) -> {
+      println(k.name + ": " + v);
+    });
+    
+    ref.forEach((k, v) -> {
+      println(k + ": " + v);
+    });
+    
+    
+    File out = new File(path);
+    if (!out.createNewFile()) {
+      throw new Exception("File already exists.");
+    }
+    
+    FileWriter writer = new FileWriter(path);
+    writer.write("name:" + this.name + "\n");
+    
+    writer.write("locations:" + this.numSpawns + "\n");
+    for (Location loc : this.spawns) {
+      writer.write(loc.xPos + "," + loc.yPos + "\n");
+    }
+    
+    writer.write("tiles:" + tiles.size() + "\n");
+    tiles.forEach((key, value) -> {
+      try {
+        writer.write(value + ":" + tiles.get(key) + ";" + key.hasHitbox + ";" + key.canInteract + ";\n");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    });
+    
+    writer.write("screen:\n");
+    for (Tile[] row : this.screen) {
+      for (Tile tile : row) {
+        writer.write(tiles.get(tile) + ",");
+      }
+      writer.write("\n");
+    }
+    
+    writer.close();
+  }
 
   public void loadScreen(String path) {
     try {
@@ -57,6 +129,7 @@ public class Screen {
         catch (Exception e) {
           System.out.println("Number of given locations or their format does not match:");
           System.out.println(e);
+          e.printStackTrace();
         }
       }
 
@@ -106,6 +179,7 @@ public class Screen {
     }
     catch (Exception e) {
       System.out.println(e);
+      e.printStackTrace();
     }
   }
 

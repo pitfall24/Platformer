@@ -36,6 +36,14 @@ public void cleanDir(File dir, boolean recursive) {
   }
 }
 
+public boolean hasExtension(File file, String extension) {
+  return hasExtension(file.getName(), extension);
+}
+
+public boolean hasExtension(String path, String extension) {
+  return path.indexOf(extension) == path.length() - extension.length() && path.charAt(path.indexOf(extension) - 1) == '.';
+}
+
 public String removeExtension(File file) throws Exception {
   if (file.isDirectory()) {
     throw new Exception("Cannot remove extension from directory");
@@ -89,16 +97,4 @@ public String absoluteRepoPath() {
 
 public double dot(double x1, double y1, double x2, double y2) {
   return x1 * x2 + y1 * y2;
-}
-
-public ArrayList<Body> getBodies(ArrayList<Tile> tiles) {
-  ArrayList<Body> out = new ArrayList<Body>(tiles.size());
-
-  for (Tile tile : tiles) {
-    if (tile.hasHitbox) {
-      out.add(tile.hitbox);
-    }
-  }
-
-  return out;
 }

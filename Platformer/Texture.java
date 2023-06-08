@@ -27,6 +27,12 @@ public class Texture implements Serializable {
 
     this.loadTexture(name);
   }
+  
+  public boolean equals(Object o) {
+    Texture other = (Texture) o;
+    
+    return this.name.equals(other.name);
+  }
 
   public void loadTexture(String filepath) {
     try {
@@ -76,6 +82,7 @@ public class Texture implements Serializable {
     }
     catch (Exception e) {
       System.out.println(e);
+      e.printStackTrace();
     }
   }
 

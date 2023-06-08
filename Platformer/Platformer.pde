@@ -15,6 +15,9 @@ void setup() {
 
   b1 = new Actor(80, 100, 100, 100);
   b2 = new Actor(80, 100, 250, 250);
+  
+  try { spawn.writeScreen(absoluteRepoPath() + "resources/worlds/screens/test.txt"); } catch (Exception e) { e.printStackTrace(); }
+  exit();
 }
 
 void draw() {

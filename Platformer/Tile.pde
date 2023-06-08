@@ -1,4 +1,4 @@
-import java.io.ObjectInputStream; //<>// //<>// //<>//
+import java.io.ObjectInputStream; //<>// //<>//
 import java.io.FileInputStream;
 import java.util.HashMap;
 
@@ -81,6 +81,12 @@ public class Tile {
 
     this.hasHitbox = other.hasHitbox;
     this.canInteract = other.canInteract;
+  }
+  
+  boolean equals(Object o) {
+    Tile other = (Tile) o;
+    
+    return this.name.equals(other.name) && this.texture.equals(other.texture) && this.hasHitbox == other.hasHitbox && this.canInteract == other.canInteract;
   }
 
   public String toString() {
