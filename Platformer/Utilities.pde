@@ -5,15 +5,31 @@ import java.util.Scanner;
 
 public void refreshTileBinaries() throws Exception {
   File targetDir = new File(absoluteRepoPath() + "/resources/textures/bin");
-  File sourceDir = new File(absoluteRepoPath() + "/resources/textures/tiles");
+  ArrayList<File> sourceDirs = new ArrayList<File>();
+  
+  sourceDirs.add(new File(absoluteRepoPath() + "/resources/textures/tiles"));
+  sourceDirs.add(new File(absoluteRepoPath() + "/resources/textures/sprites"));
 
   cleanDir(targetDir, false);
-  createTileBinaries(sourceDir, targetDir);
+  createTileBinaries(sourceDirs, targetDir);
+}
+
+public void createTileBinaries(ArrayList<File> sourceDirs, File targetDir) throws Exception {
+  for (File sourceDir : sourceDirs) {
+    for (File file : sourceDir.listFiles()) {
+      Texture texture = new Texture(file.getAbsolutePath());
+
+      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetDir.getAbsolutePath() + "/" + removeExtension(file) + ".bin"));
+
+      out.writeObject(texture);
+      out.close();
+    }
+  }
 }
 
 public void createTileBinaries(File sourceDir, File targetDir) throws Exception {
   for (File file : sourceDir.listFiles()) {
-    Texture texture = new Texture(file.getAbsolutePath(), 8, 8);
+    Texture texture = new Texture(file.getAbsolutePath());
 
     ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetDir.getAbsolutePath() + "/" + removeExtension(file) + ".bin"));
 

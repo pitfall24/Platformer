@@ -126,7 +126,7 @@ public class Tile {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         this.setSketchColor(sketch, i, j);
-        sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
+        sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - (j + 1) * pixelH - this.yPosition * pixelH, pixelW, pixelH);
       }
     }
   }

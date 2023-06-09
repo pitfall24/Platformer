@@ -6,6 +6,9 @@ Actor b1;
 Actor b2;
 
 void setup() {
+  //try { refreshTileBinaries(); } catch (Exception e) {}
+  //exit();
+  
   frameRate(30);
   size(960, 528);
 
@@ -13,8 +16,8 @@ void setup() {
 
   spawn = new Screen("spawn");
 
-  b1 = new Actor(80, 100, 100, 100);
-  b2 = new Actor(80, 100, 250, 250);
+  b1 = new Actor(8, 10, 25, 40, absoluteRepoPath() + "resources/textures/bin/player.bin", 0.0, 0.0);
+  b2 = new Actor(8, 10, 25, 25);
   
   //try { spawn.writeScreen(absoluteRepoPath() + "resources/worlds/screens/test.txt"); } catch (Exception e) { e.printStackTrace(); }
   //exit();
@@ -24,31 +27,31 @@ void draw() {
   background(255, 255, 255);
 
   spawn.draw(this);
-  spawn.drawHitboxes(this);
   
   fill(255, 0, 0);
   noStroke();
   
   b1.draw(this, spawn.width, spawn.height);
-  b2.draw(this);
+  b2.draw(this, spawn.width, spawn.height);
+  
+  //b1.drawHitbox(this, spawn.width, spawn.height);
 
   if (mousePressed) {
+    // fix this. scale by what to make one-to-one?
+    
     if (mouseButton == LEFT) {
-      b1.xVelocity = mouseX - b1.xOrigin;
-      b1.yVelocity = mouseY - b1.yOrigin;
-
-      b1.xOrigin = mouseX;
-      b1.yOrigin = height - mouseY;
+      b1.xOrigin = mouseX / 4;
+      b1.yOrigin = (height - mouseY) / 5;
     } else if (mouseButton == RIGHT) {
-      b2.xOrigin = mouseX;
-      b2.yOrigin = height - mouseY;
+      b2.xOrigin = mouseX / 4;
+      b2.yOrigin = (height - mouseY) / 5;
     }
   }
 
-  b1.update(this, 1.0 / frameRate, 5, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })), false);
+  b1.update(this, 1.0 / frameRate, 15, new ArrayList<Body>(Arrays.asList(new Body[] { b2 })), false);
   b2.blindUpdate(1.0 / frameRate);
 
-  b1.update(this, 1.0 / frameRate, 5, spawn, true);
+  b1.update(this, 1.0 / frameRate, 15, spawn, false);
 
   println(frameRate);
 }
@@ -57,25 +60,25 @@ void keyPressed() {
   switch (key) {
   case 'w':
     {
-      b1.yVelocity = 150;
+      b1.yVelocity = 50;
 
       break;
     }
   case 'a':
     {
-      b1.xVelocity = -150;
+      b1.xVelocity = -50;
 
       break;
     }
   case 's':
     {
-      b1.yVelocity = -150;
+      b1.yVelocity = -50;
 
       break;
     }
   case 'd':
     {
-      b1.xVelocity = 150;
+      b1.xVelocity = 50;
 
       break;
     }

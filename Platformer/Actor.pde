@@ -30,7 +30,7 @@ public class Actor extends Body {
   boolean dashing;
   boolean grabbing;
   boolean crouching;
-  
+
   Texture texture;
   double textureX;
   double textureY;
@@ -53,6 +53,89 @@ public class Actor extends Body {
     this.crouching = false;
   }
 
+  public Actor(int width, int height, int xOrigin, int yOrigin, Texture texture, double textureX, double textureY) {
+    super(width, height, xOrigin, yOrigin);
+
+    this.width = width;
+    this.height = height;
+
+    this.facing = 0;
+
+    this.timeOnGround = 0.0;
+    this.timeDashing = 0.0;
+    this.timeGrabbing = 0.0;
+
+    this.onGround = true;
+    this.dashing = false;
+    this.grabbing = false;
+    this.crouching = false;
+
+    this.texture = texture;
+    this.textureX = textureX;
+    this.textureY = textureY;
+  }
+
+  public Actor(int width, int height, int xOrigin, int yOrigin, String texturePath, double textureX, double textureY) {
+    super(width, height, xOrigin, yOrigin);
+
+    this.width = width;
+    this.height = height;
+
+    this.facing = 0;
+
+    this.timeOnGround = 0.0;
+    this.timeDashing = 0.0;
+    this.timeGrabbing = 0.0;
+
+    this.onGround = true;
+    this.dashing = false;
+    this.grabbing = false;
+    this.crouching = false;
+
+    this.texture = this.getTexture(texturePath);
+    this.textureX = textureX;
+    this.textureY = textureY;
+  }
+
+  public Texture getTexture(String texturePath) {
+    try {
+      Texture out;
+      
+      ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(texturePath));
+      out = (Texture) objIn.readObject();
+      objIn.close();
+      
+      return out;
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      
+      return null;
+    }
+  }
+
+  public Actor(int width, int height, int xOrigin, int yOrigin, String texturePath, int textureW, int textureH, double textureX, double textureY) {
+    super(width, height, xOrigin, yOrigin);
+
+    this.width = width;
+    this.height = height;
+
+    this.facing = 0;
+
+    this.timeOnGround = 0.0;
+    this.timeDashing = 0.0;
+    this.timeGrabbing = 0.0;
+
+    this.onGround = true;
+    this.dashing = false;
+    this.grabbing = false;
+    this.crouching = false;
+
+    this.texture = new Texture(texturePath, textureW, textureH);
+    this.textureX = textureX;
+    this.textureY = textureY;
+  }
+
   public Actor(Actor other) {
     super((Body) other);
 
@@ -70,11 +153,13 @@ public class Actor extends Body {
     this.grabbing = other.grabbing;
     this.crouching = other.crouching;
   }
-  
+
   public void draw(PApplet sketch, int tilesWide, int tilesTall) {
-    super.draw(sketch, tilesWide, tilesTall);
-    
-    //this.texture.draw(sketch, tilesWide, tilesTall, this.xOrigin + this.textureX, this.yOrigin + this.textureY);
+    if (this.texture == null) {
+      super.draw(sketch, tilesWide, tilesTall);
+    } else {
+      this.texture.draw(sketch, tilesWide, tilesTall, this.xOrigin + this.textureX - this.width / 2.0, this.yOrigin + this.textureY - this.height / 2.0);
+    }
   }
 
   public void blindUpdate(double deltaT) {
@@ -84,7 +169,7 @@ public class Actor extends Body {
   public void update(PApplet sketch, double deltaT, int steps, ArrayList<Body> bodies) {
     super.update(sketch, deltaT, steps, bodies, false);
   }
-  
+
   public void update(PApplet sketch, double deltaT, int steps, Screen screen) {
     super.update(sketch, deltaT, steps, screen, false);
   }

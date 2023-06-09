@@ -257,7 +257,7 @@ public class Body { //<>// //<>//
 
     for (Body body : bodies) {
       Direction dir;
-      if (!propToScreen) {
+      if (propToScreen) {
         Body transformed = this.transform(body, sketch, 40, 22);
         if (this.colliding(transformed)) {
           dir = findCollisionDirection(deltaT, copy, transformed);
@@ -284,7 +284,7 @@ public class Body { //<>// //<>//
       for (Tile tile : row) {
         if (tile.hasHitbox) {
           Direction dir;
-          if (!propToScreen) {
+          if (propToScreen) {
             Body transformed = this.transform(tile.hitbox, sketch, screen.width, screen.height);
             if (this.colliding(transformed)) {
               dir = findCollisionDirection(deltaT, copy, transformed);
@@ -344,7 +344,7 @@ public class Body { //<>// //<>//
 
     for (Pair<Body, Direction> body : collided) {
       Body copy = this.transform(body.first, sketch, screen.width, screen.height);
-      if (!propToScreen) {
+      if (propToScreen) {
         Body temp = new Body(copy);
         copy = new Body(body.first);
         body.first = new Body(temp);
@@ -402,7 +402,7 @@ public class Body { //<>// //<>//
         }
       }
 
-      if (!propToScreen) {
+      if (propToScreen) {
         body.first = new Body(copy);
       }
     }
@@ -438,7 +438,7 @@ public class Body { //<>// //<>//
     sketch.fill(0, 0, 0, 0);
     sketch.strokeWeight(boxWidth);
 
-    sketch.rect((float) this.xOrigin * pixelW, (float) (sketch.height - this.yOrigin * pixelH), (float) this.width * boxWidth - boxWidth, (float) this.height * boxWidth - boxWidth);
+    sketch.rect((float) this.xOrigin * pixelW, (float) (sketch.height - this.yOrigin * pixelH), (float) this.width * pixelW - boxWidth, (float) this.height * pixelH - boxWidth);
 
     sketch.popStyle();
   }

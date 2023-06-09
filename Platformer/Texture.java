@@ -5,7 +5,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 
 public class Texture implements Serializable {
-  String name;
+  String path;
 
   int width;
   int height;
@@ -14,9 +14,24 @@ public class Texture implements Serializable {
   byte[][] greenTexture;
   byte[][] blueTexture;
   byte[][] alphaTexture;
+  
+  public Texture(String path) {
+    this.path = path;
+    
+    Pair<Integer, Integer> dims = this.getDims(this.path);
+    this.width = dims.first;
+    this.height = dims.second;
+    
+    this.redTexture = new byte[this.height][this.width];
+    this.greenTexture = new byte[this.height][this.width];
+    this.blueTexture = new byte[this.height][this.width];
+    this.alphaTexture = new byte[this.height][this.width];
+    
+    this.loadTexture(path);
+  }
 
-  public Texture(String name, int width, int height) {
-    this.name = name;
+  public Texture(String path, int width, int height) {
+    this.path = path;
 
     this.width = width;
     this.height = height;
@@ -26,7 +41,27 @@ public class Texture implements Serializable {
     this.blueTexture = new byte[height][width];
     this.alphaTexture = new byte[height][width];
 
-    this.loadTexture(name);
+    this.loadTexture(path);
+  }
+  
+  public Pair<Integer, Integer> getDims(String filepath) {
+    Pair<Integer, Integer> out = new Pair<Integer, Integer>();
+    
+    try {
+      Scanner sc = new Scanner(new File(filepath));
+      
+      String ln = sc.nextLine();
+      assert(ln.substring(0, ln.indexOf(":") + 1).equals("size:"));
+      
+      out.first = Integer.valueOf(ln.substring(ln.indexOf(":") + 1, ln.indexOf(",")));
+      out.second = Integer.valueOf(ln.substring(ln.indexOf(",") + 1, ln.indexOf(";")));
+      
+      sc.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    return out;
   }
   
   public void draw(PApplet sketch, int tilesWide, int tilesTall, double xPosition, double yPosition) {
@@ -38,10 +73,10 @@ public class Texture implements Serializable {
     float pixelW = (float) (sketch.width / (8.0 * tilesWide));
     float pixelH = (float) (sketch.height / (8.0 * tilesTall));
 
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < this.width; i++) {
+      for (int j = 0; j < this.height; j++) {
         this.setSketchColor(sketch, i, j);
-        sketch.rect((float) (i * pixelW + xPosition * pixelW), (float) (j * pixelH + yPosition * pixelH), pixelW, pixelH);
+        sketch.rect((float) (i * pixelW + xPosition * pixelW), sketch.height - (float) ((j + 1) * pixelH + yPosition * pixelH), pixelW, pixelH);
       }
     }
 
@@ -55,13 +90,14 @@ public class Texture implements Serializable {
   public boolean equals(Object o) {
     Texture other = (Texture) o;
     
-    return this.name.equals(other.name);
+    return this.path.equals(other.path);
   }
 
   public void loadTexture(String filepath) {
     try {
       Scanner sc = new Scanner(new File(filepath));
-
+      
+      assert(sc.nextLine().equals("size:" + this.width + "," + this.height + ";"));
       assert(sc.nextLine().equals("redTexture:"));
       for (int i = 0; i < this.height; i++) {
         String line = sc.nextLine();
