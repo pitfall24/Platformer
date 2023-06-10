@@ -14,6 +14,18 @@ public class Tile {
 
   boolean hasHitbox;
   boolean canInteract;
+  
+  public Tile(Tile other) {
+    this.name = other.name;
+    this.texture = new Texture(absoluteRepoPath() + "resources/textures/tiles/" + other.name + ".bin", 8, 8);
+    
+    this.hitbox = other.hitbox;
+    this.xPosition = other.xPosition;
+    this.yPosition = other.yPosition;
+    
+    this.hasHitbox = other.hasHitbox;
+    this.canInteract = other.canInteract;
+  }
 
   public Tile(String name, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
     this.name = name;
@@ -21,7 +33,7 @@ public class Tile {
     if (loaded.containsKey(this.name)) {
       this.texture = loaded.get(this.name);
     } else {
-      this.texture = new Texture(name, 8, 8);
+      this.texture = new Texture(absoluteRepoPath() + "resources/textures/tiles/" + name, 8, 8);
 
       loaded.put(this.name, this.texture);
     }
@@ -129,6 +141,10 @@ public class Tile {
         sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - (j + 1) * pixelH - this.yPosition * pixelH, pixelW, pixelH);
       }
     }
+  }
+  
+  public void forceDrawHitbox(PApplet sketch, int tilesWide, int tilesTall) {
+    this.hitbox.drawHitbox(sketch, tilesWide, tilesTall);
   }
 
   public void drawHitbox(PApplet sketch, int tilesWide, int tilesTall) {

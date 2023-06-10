@@ -3,7 +3,7 @@ import java.io.FileOutputStream;
 import java.io.File;
 import java.util.Scanner;
 
-public void refreshTileBinaries() throws Exception {
+public void refreshBinaries() throws Exception {
   File targetDir = new File(absoluteRepoPath() + "/resources/textures/bin");
   ArrayList<File> sourceDirs = new ArrayList<File>();
   
@@ -11,12 +11,16 @@ public void refreshTileBinaries() throws Exception {
   sourceDirs.add(new File(absoluteRepoPath() + "/resources/textures/sprites"));
 
   cleanDir(targetDir, false);
-  createTileBinaries(sourceDirs, targetDir);
+  createBinaries(sourceDirs, targetDir);
 }
 
-public void createTileBinaries(ArrayList<File> sourceDirs, File targetDir) throws Exception {
+public void createBinaries(ArrayList<File> sourceDirs, File targetDir) throws Exception {
   for (File sourceDir : sourceDirs) {
     for (File file : sourceDir.listFiles()) {
+      if (file.getName().charAt(0) == '.') {
+        continue;
+      }
+      
       Texture texture = new Texture(file.getAbsolutePath());
 
       ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetDir.getAbsolutePath() + "/" + removeExtension(file) + ".bin"));

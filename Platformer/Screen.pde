@@ -16,7 +16,7 @@ public class Screen {
   public Screen() {
     this.height = 22;
     this.width = 40;
-    this.name = "";
+    this.name = null;
   }
   
   public Screen(String name) {
@@ -37,7 +37,7 @@ public class Screen {
     this.loadScreen(path);
   }
   
-  public void writeScreen(String path) throws Exception {
+  public void writeScreen(String path, String newName) throws Exception {
     assert(hasExtension(path, "txt"));
     
     HashMap<Tile, String> tiles = new HashMap<Tile, String>();
@@ -64,23 +64,13 @@ public class Screen {
       }
     }
     
-    /*
-    tiles.forEach((k, v) -> {
-      println(k.name + ": " + v);
-    });
-    
-    ref.forEach((k, v) -> {
-      println(k + ": " + v);
-    });
-    */
-    
     File out = new File(path);
     if (!out.createNewFile()) {
       throw new Exception("File already exists.");
     }
     
     FileWriter writer = new FileWriter(path);
-    writer.write("name:" + this.name + "\n");
+    writer.write("name:" + newName + "\n");
     
     writer.write("locations:" + this.numSpawns + "\n");
     for (Location loc : this.spawns) {
@@ -221,6 +211,14 @@ public class Screen {
     }
 
     sketch.popStyle();
+  }
+  
+  public void drawAllHitboxes(PApplet sketch) {
+    for (Tile[] row : this.screen) {
+      for (Tile tile : row) {
+        tile.forceDrawHitbox(sketch, this.width, this.height);
+      }
+    }
   }
 
   public void drawHitboxes(PApplet sketch) {

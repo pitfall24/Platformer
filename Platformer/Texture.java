@@ -76,7 +76,7 @@ public class Texture implements Serializable {
     for (int i = 0; i < this.width; i++) {
       for (int j = 0; j < this.height; j++) {
         this.setSketchColor(sketch, i, j);
-        sketch.rect((float) (i * pixelW + xPosition * pixelW), sketch.height - (float) ((j + 1) * pixelH + yPosition * pixelH), pixelW, pixelH);
+        sketch.rect((float) (i * pixelW + xPosition * pixelW), sketch.height - (float) ((this.height - j) * pixelH + yPosition * pixelH), pixelW, pixelH);
       }
     }
 
