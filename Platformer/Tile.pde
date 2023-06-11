@@ -17,7 +17,7 @@ public class Tile {
   
   public Tile(Tile other) {
     this.name = other.name;
-    this.texture = new Texture(absoluteRepoPath() + "resources/textures/tiles/" + other.name + ".bin", 8, 8);
+    this.texture = other.texture;
     
     this.hitbox = other.hitbox;
     this.xPosition = other.xPosition;

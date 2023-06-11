@@ -21,6 +21,7 @@ public class Actor extends Body {
   int width, height;
 
   int facing;
+  int dashes;
 
   double timeOnGround;
   double timeDashing;
@@ -42,6 +43,7 @@ public class Actor extends Body {
     this.height = height;
 
     this.facing = 0;
+    this.dashes = 1;
 
     this.timeOnGround = 0.0;
     this.timeDashing = 0.0;
@@ -60,6 +62,7 @@ public class Actor extends Body {
     this.height = height;
 
     this.facing = 0;
+    this.dashes = 1;
 
     this.timeOnGround = 0.0;
     this.timeDashing = 0.0;
@@ -82,6 +85,7 @@ public class Actor extends Body {
     this.height = height;
 
     this.facing = 0;
+    this.dashes = 1;
 
     this.timeOnGround = 0.0;
     this.timeDashing = 0.0;
@@ -97,23 +101,6 @@ public class Actor extends Body {
     this.textureY = textureY;
   }
 
-  public Texture getTexture(String texturePath) {
-    try {
-      Texture out;
-      
-      ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(texturePath));
-      out = (Texture) objIn.readObject();
-      objIn.close();
-      
-      return out;
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      
-      return null;
-    }
-  }
-
   public Actor(int width, int height, int xOrigin, int yOrigin, String texturePath, int textureW, int textureH, double textureX, double textureY) {
     super(width, height, xOrigin, yOrigin);
 
@@ -121,6 +108,7 @@ public class Actor extends Body {
     this.height = height;
 
     this.facing = 0;
+    this.dashes = 1;
 
     this.timeOnGround = 0.0;
     this.timeDashing = 0.0;
@@ -143,6 +131,7 @@ public class Actor extends Body {
     this.height = other.height;
 
     this.facing = other.facing;
+    this.dashes = other.dashes;
 
     this.timeOnGround = other.timeOnGround;
     this.timeDashing = other.timeOnGround;
@@ -152,6 +141,31 @@ public class Actor extends Body {
     this.dashing = other.dashing;
     this.grabbing = other.grabbing;
     this.crouching = other.crouching;
+  }
+
+  public void act(PApplet sketch, Screen screen, double deltaT, HashMap<Integer, Pair<Boolean, Boolean>> inputs) {
+    if (onGround || grabbing) {
+      if (inputs.get((int) 'c').first && !inputs.get((int) 'c').second) {
+        // jumped this frame
+      }
+    }
+  }
+
+  public Texture getTexture(String texturePath) {
+    try {
+      Texture out;
+
+      ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(texturePath));
+      out = (Texture) objIn.readObject();
+      objIn.close();
+
+      return out;
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+
+      return null;
+    }
   }
 
   public void draw(PApplet sketch, int tilesWide, int tilesTall) {

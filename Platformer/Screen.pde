@@ -17,13 +17,18 @@ public class Screen {
     this.height = 22;
     this.width = 40;
     this.name = null;
+    
+    this.numSpawns = 0;
+    Location[] spawns = new Location[0];
+    
+    Tile[][] screen = new Tile[this.height][this.width];
   }
   
   public Screen(String name) {
     this.height = 22;
     this.width = 40;
     this.name = name;
-    this.screen = new Tile[height][width];
+    this.screen = new Tile[this.height][this.width];
 
     this.loadScreen(absoluteRepoPath() + "/resources/worlds/screens/" + name + ".txt");
   }
@@ -32,7 +37,7 @@ public class Screen {
     this.height = 22;
     this.width = 40;
     this.name = name;
-    this.screen = new Tile[height][width];
+    this.screen = new Tile[this.height][this.width];
 
     this.loadScreen(path);
   }
@@ -80,7 +85,7 @@ public class Screen {
     writer.write("tiles:" + tiles.size() + "\n");
     tiles.forEach((key, value) -> {
       try {
-        writer.write(value + ":" + tiles.get(key) + ";" + key.hasHitbox + ";" + key.canInteract + ";\n");
+        writer.write(value + ":" + key.name + ";" + key.hasHitbox + ";" + key.canInteract + ";\n");
       } catch (Exception e) {
         e.printStackTrace();
       }

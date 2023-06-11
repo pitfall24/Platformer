@@ -1,13 +1,16 @@
 import java.util.Arrays;
 
-Screen spawn;
+Screen editing;
 
 //Actor b1;
 //Actor b2;
 
+HashMap<Integer, Pair<Boolean, Boolean>> inputs;
+
 String newName;
 
 int tileInd;
+int switchInd;
 ArrayList<Tile> palette;
 
 boolean hasHitbox;
@@ -20,17 +23,31 @@ void setup() {
   size(960, 528);
 
   rectMode(CENTER);
-
-  spawn = new Screen("spawn");
   
-  newName = "test";
+  // refactor into world probably
+  inputs = new HashMap<Integer, Pair<Boolean, Boolean>>();
+  
+  inputs.put((int) Direction.UP.label, new Pair<Boolean, Boolean>(false, false));
+  inputs.put((int) Direction.DOWN.label, new Pair<Boolean, Boolean>(false, false));
+  inputs.put((int) Direction.LEFT.label, new Pair<Boolean, Boolean>(false, false));
+  inputs.put((int) Direction.RIGHT.label, new Pair<Boolean, Boolean>(false, false));
+  
+  inputs.put((int) 'z', new Pair<Boolean, Boolean>(false, false));
+  inputs.put((int) 'x', new Pair<Boolean, Boolean>(false, false));
+  inputs.put((int) 'c', new Pair<Boolean, Boolean>(false, false));
+
+
+  editing = new Screen("test");
+  newName = "test2";
 
   tileInd = 0;
+  switchInd = 0;
   palette = new ArrayList<Tile>();
 
   for (File file : new File(absoluteRepoPath() + "resources/textures/tiles/").listFiles()) {
     try {
-      palette.add(new Tile(removeExtension(file.getName()), absoluteRepoPath() + "resources/textures/bin/" + removeExtension(file.getName()) + ".bin", hasHitbox, canInteract, 0, 0));
+      String name = removeExtension(file.getName());
+      palette.add(new Tile(name, absoluteRepoPath() + "resources/textures/bin/" + name + ".bin", false, false, 0, 0));
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -47,9 +64,13 @@ void setup() {
 void draw() {
   background(128, 255, 255);
 
-  spawn.draw(this);
-  spawn.drawHitboxes(this);
+  editing.draw(this);
+  editing.drawHitboxes(this);
   
+  for (Map.Entry<Integer, Pair<Boolean, Boolean>> entry : inputs.entrySet()) {
+    println(entry.getKey() + ": " + entry.getValue());
+  }
+
   //println(frameRate);
   //b1.draw(this, spawn.width, spawn.height);
   //b2.draw(this, spawn.width, spawn.height);
@@ -76,124 +97,156 @@ void draw() {
    */
 }
 
-void mouseReleased() {
-  int x = mouseX / (width / spawn.width);
-  int y = spawn.height - mouseY / (height / spawn.height);
-
-  Tile tile = new Tile(palette.get(tileInd));
-  
-  tile.hitbox = new Body(8, 8, x * 8 + 4.0, (y - 1) * 8 + 4.0);
-  tile.xPosition = x * 8;
-  tile.yPosition = (y - 1) * 8;
-
-  tile.hasHitbox = hasHitbox;
-  tile.canInteract = canInteract;
-
-  spawn.screen[spawn.height - y][x] = tile;
-}
-
-void keyReleased() {
+void keyPressed() {
   switch (keyCode) {
-  case ENTER:
+  case UP:
     {
-      try {
-        spawn.writeScreen(absoluteRepoPath() + "resources/worlds/screens/" + newName + ".txt", newName);
-        exit();
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        return;
-      }
+      inputs.put((int) Direction.UP.label, new Pair<Boolean, Boolean>(true, inputs.get((int) Direction.UP.label).first));
+    }
+  case DOWN:
+    {
+      inputs.put((int) Direction.DOWN.label, new Pair<Boolean, Boolean>(true, inputs.get((int) Direction.DOWN.label).first));
+    }
+  case LEFT:
+    {
+      inputs.put((int) Direction.LEFT.label, new Pair<Boolean, Boolean>(true, inputs.get((int) Direction.LEFT.label).first));
+    }
+  case RIGHT:
+    {
+      inputs.put((int) Direction.RIGHT.label, new Pair<Boolean, Boolean>(true, inputs.get((int) Direction.RIGHT.label).first));
     }
   }
 
   switch (key) {
-  case 'h':
+  case 'z':
     {
-      hasHitbox = !hasHitbox;
-      println("hasHitbox=" + hasHitbox);
-      break;
+      inputs.put((int) 'z', new Pair<Boolean, Boolean>(true, inputs.get((int) 'z').first));
     }
-  case 'i':
+  case 'x':
     {
-      canInteract = !canInteract;
-      println("canInteract=" + canInteract);
-      break;
+      inputs.put((int) 'x', new Pair<Boolean, Boolean>(true, inputs.get((int) 'x').first));
+    }
+  case 'c':
+    {
+      inputs.put((int) 'c', new Pair<Boolean, Boolean>(true, inputs.get((int) 'c').first));
     }
   }
 }
 
-void mouseWheel(MouseEvent event) {
-  if (event.getCount() > 0) {
-    tileInd = (tileInd + 1) % palette.size();
-  } else if (event.getCount() < 0) {
-    tileInd = (tileInd - 1) % palette.size();
+void keyReleased() {
+  switch (keyCode) {
+  case UP:
+    {
+      inputs.put((int) Direction.UP.label, new Pair<Boolean, Boolean>(false, inputs.get((int) Direction.UP.label).first));
+    }
+  case DOWN:
+    {
+      inputs.put((int) Direction.DOWN.label, new Pair<Boolean, Boolean>(false, inputs.get((int) Direction.DOWN.label).first));
+    }
+  case LEFT:
+    {
+      inputs.put((int) Direction.LEFT.label, new Pair<Boolean, Boolean>(false, inputs.get((int) Direction.LEFT.label).first));
+    }
+  case RIGHT:
+    {
+      inputs.put((int) Direction.RIGHT.label, new Pair<Boolean, Boolean>(false, inputs.get((int) Direction.RIGHT.label).first));
+    }
   }
-  
-  println("tileInd=" + tileInd + ", tilename=" + palette.get(tileInd).name);
+
+  switch (key) {
+  case 'z':
+    {
+      inputs.put((int) 'z', new Pair<Boolean, Boolean>(false, inputs.get((int) 'z').first));
+    }
+  case 'x':
+    {
+      inputs.put((int) 'x', new Pair<Boolean, Boolean>(false, inputs.get((int) 'x').first));
+    }
+  case 'c':
+    {
+      inputs.put((int) 'c', new Pair<Boolean, Boolean>(false, inputs.get((int) 'c').first));
+    }
+  }
 }
 
-/*
-void keyPressed() {
- switch (key) {
- case 'w':
- {
- b1.yVelocity = 50;
+/* for creating new screens
+ void mouseReleased() {
+ int x = mouseX / (width / editing.width);
+ int y = editing.height - mouseY / (height / editing.height);
  
- break;
- }
- case 'a':
- {
- b1.xVelocity = -50;
+ Tile tile = new Tile(palette.get(tileInd));
  
- break;
- }
- case 's':
- {
- b1.yVelocity = -50;
+ tile.hitbox = new Body(8, 8, x * 8 + 4.0, (y - 1) * 8 + 4.0);
+ tile.xPosition = x * 8;
+ tile.yPosition = (y - 1) * 8;
  
- break;
- }
- case 'd':
- {
- b1.xVelocity = 50;
+ tile.hasHitbox = hasHitbox;
+ tile.canInteract = canInteract;
  
- break;
- }
- }
+ editing.screen[editing.height - y][x] = tile;
  }
  
  void keyReleased() {
- switch (key) {
- case 'w':
+ switch (keyCode) {
+ case ENTER:
  {
- b1.yVelocity = 0;
+ try {
+ editing.writeScreen(absoluteRepoPath() + "resources/worlds/screens/" + newName + ".txt", newName);
+ exit();
+ }
+ catch (Exception e) {
+ e.printStackTrace();
+ return;
+ }
+ }
+ }
  
+ switch (key) {
+ case 'h':
+ {
+ hasHitbox = !hasHitbox;
+ println("hasHitbox=" + hasHitbox);
  break;
  }
- case 'a':
+ case 'i':
  {
- b1.xVelocity = 0;
- 
+ canInteract = !canInteract;
+ println("canInteract=" + canInteract);
  break;
+ }
+ case 'e':
+ {
+ int temp = tileInd;
+ tileInd = switchInd;
+ switchInd = temp;
  }
  case 's':
  {
- b1.yVelocity = 0;
+ editing.numSpawns += 1;
+ Location[] added = new Location[editing.numSpawns];
  
+ for (int i = 0; i < editing.numSpawns - 1; i++) {
+ added[i] = editing.spawns[i];
+ }
+ added[editing.numSpawns - 1] = new Location(mouseX * editing.width / width, editing.height - mouseY * editing.height / height);
+ 
+ editing.spawns = added;
  break;
  }
- case 'd':
- {
- b1.xVelocity = 0;
+ }
+ }
  
- break;
+ void mouseWheel(MouseEvent event) {
+ if (event.getCount() > 0) {
+ tileInd = (tileInd + 1) % palette.size();
+ } else if (event.getCount() < 0) {
+ tileInd = (tileInd - 1) % palette.size();
+ 
+ if (tileInd < 0) {
+ tileInd += palette.size();
  }
- default:
- {
- b1.xVelocity = 0;
- b1.yVelocity = 0;
  }
- }
+ 
+ println("tileInd=" + tileInd + ", tilename=" + palette.get(tileInd).name);
  }
  */

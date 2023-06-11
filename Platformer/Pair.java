@@ -11,4 +11,8 @@ public class Pair<T1, T2> {
     this.first = null;
     this.second = null;
   }
+  
+  public String toString() {
+    return "{" + this.first.toString() + ", " + this.second.toString() + "}";
+  }
 }
