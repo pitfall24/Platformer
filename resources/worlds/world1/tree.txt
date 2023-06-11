@@ -1,0 +1,10 @@
+roomLabels:spawn,test;
+spawnRoom:spawn
+spawn:
+foreground:spawn;
+backgroundScreens:;
+backgroundImages:starryBackground;
+test:
+foreground:test;
+backgroundScreens:test2;
+backgroundImages:;

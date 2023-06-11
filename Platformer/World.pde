@@ -1,31 +1,27 @@
 import java.io.File;
 
 public class World {
-  Tree<Screen> world;
-  Screen currentlyOn;
+  Tree<Pair<Screen, ArrayList<Layer>>> world;
+  Pair<Screen, ArrayList<Layer>> currentlyOn;
   Actor player;
 
-  public World(Screen start) {
-    this.world = new Tree<Screen>(start);
+  public World(Pair<Screen, ArrayList<Layer>> start) {
+    this.world = new Tree<Pair<Screen, ArrayList<Layer>>>(start);
     this.currentlyOn = start;
 
-    this.player = new Actor(8, 10, start.spawns[0].xPos, start.spawns[0].yPos);
+    this.player = new Actor(8, 10, start.first.spawns[0].xPos, start.first.spawns[0].yPos);
   }
 
-  public World(String directory) {
-    this.world = new Tree<Screen>();
+  public World(String path) {
+    this.world = new Tree<Pair<Screen, ArrayList<Layer>>>();
 
-    this.loadTree(directory);
+    this.loadTree(path);
   }
 
-  public void loadTree(String directory) {
-    File dir = new File(directory);
+  public void loadTree(String path) {
+    File file = new File(path);
 
-    for (File screen : dir.listFiles()) {
-      System.out.println(screen.getName());
-
-      Screen cur = this.parseScreen(screen, screen.getName());
-    }
+    
   }
 
   public Screen parseScreen(File screen, String name) {

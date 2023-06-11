@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Screen {
+public class Screen extends Layer {
   final int height;
   final int width;
-  final String name;
+  String name;
   int numSpawns;
   Location[] spawns;
   Tile[][] screen;
@@ -24,22 +24,21 @@ public class Screen {
     Tile[][] screen = new Tile[this.height][this.width];
   }
   
-  public Screen(String name) {
+  public Screen(String path) {
     this.height = 22;
     this.width = 40;
-    this.name = name;
-    this.screen = new Tile[this.height][this.width];
-
-    this.loadScreen(absoluteRepoPath() + "/resources/worlds/screens/" + name + ".txt");
-  }
-
-  public Screen(String name, String path) {
-    this.height = 22;
-    this.width = 40;
-    this.name = name;
     this.screen = new Tile[this.height][this.width];
 
     this.loadScreen(path);
+  }
+  
+  public Screen(String world, String name) {
+    this.height = 22;
+    this.width = 40;
+    this.name = name;
+    this.screen = new Tile[this.height][this.width];
+
+    this.loadScreen(absoluteRepoPath() + "/resources/worlds/" + world + "/screens/" + name + ".txt");
   }
   
   public void writeScreen(String path, String newName) throws Exception {
@@ -110,9 +109,13 @@ public class Screen {
   public void loadScreen(String path) {
     try {
       Scanner sc = new Scanner(new File(path));
-
-      assert(sc.nextLine().equals("name:" + this.name));
-
+      
+      {
+        String ln = sc.nextLine();
+        
+        this.name = ln.substring(ln.indexOf(":") + 1);
+      }
+      
       {
         String ln = sc.nextLine();
 

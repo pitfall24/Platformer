@@ -1,6 +1,7 @@
 import java.util.Arrays;
 
 Screen editing;
+Background back;
 
 //Actor b1;
 //Actor b2;
@@ -18,9 +19,9 @@ boolean canInteract;
 
 void setup() {
   //try { refreshBinaries(); } catch (Exception e) { e.printStackTrace(); println("refresh error ^^"); } exit(); return;
-
+  
   frameRate(30);
-  size(960, 528);
+  size(1920, 1056);
 
   rectMode(CENTER);
   
@@ -37,8 +38,10 @@ void setup() {
   inputs.put((int) 'c', new Pair<Boolean, Boolean>(false, false));
 
 
-  editing = new Screen("test");
+  editing = new Screen("world1", "test");
   newName = "test2";
+  
+  back = new Background(absoluteRepoPath() + "resources/images/starryBackground.png");
 
   tileInd = 0;
   switchInd = 0;
@@ -62,14 +65,16 @@ void setup() {
 }
 
 void draw() {
-  background(128, 255, 255);
-
+  back.draw(this);
+  
   editing.draw(this);
   editing.drawHitboxes(this);
   
+  /*
   for (Map.Entry<Integer, Pair<Boolean, Boolean>> entry : inputs.entrySet()) {
     println(entry.getKey() + ": " + entry.getValue());
   }
+  */
 
   //println(frameRate);
   //b1.draw(this, spawn.width, spawn.height);
