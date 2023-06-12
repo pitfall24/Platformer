@@ -117,8 +117,8 @@ public class Tile {
     float pixelW = (float) sketch.width / (8.0 * tilesWide);
     float pixelH = (float) sketch.height / (8.0 * tilesTall);
 
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < this.texture.width; i++) {
+      for (int j = this.texture.height - 1; j >= 0; j--) {
         this.setSketchColor(sketch, i, j);
         sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
       }
@@ -135,9 +135,9 @@ public class Tile {
     float pixelW = (float) sketch.width / (8.0 * tilesWide);
     float pixelH = (float) sketch.height / (8.0 * tilesTall);
 
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        this.setSketchColor(sketch, i, j);
+    for (int i = 0; i < this.texture.width; i++) {
+      for (int j = this.texture.height - 1; j >= 0; j--) {
+        this.setSketchColor(sketch, i, this.texture.height - j - 1);
         sketch.rect(i * pixelW + this.xPosition * pixelW, sketch.height - (j + 1) * pixelH - this.yPosition * pixelH, pixelW, pixelH);
       }
     }
