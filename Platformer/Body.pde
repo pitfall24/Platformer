@@ -303,44 +303,52 @@ public class Body { //<>// //<>//
     return out;
   }
 
-  public void update(PApplet sketch, double deltaT, int steps, ArrayList<Body> bodies, boolean propToScreen) {
+  public Direction update(PApplet sketch, double deltaT, int steps, ArrayList<Body> bodies, boolean propToScreen) {
     double timeStep = deltaT / steps;
+    Direction dir = null;
 
     while (deltaT > timeStep / 2) {
-      this.step(sketch, timeStep, bodies, propToScreen);
+      dir = this.step(sketch, timeStep, bodies, propToScreen);
 
       deltaT -= timeStep;
     }
+    
+    return dir;
   }
 
-  public void update(PApplet sketch, double deltaT, int steps, Screen screen, boolean propToScreen) {
+  public Direction update(PApplet sketch, double deltaT, int steps, Screen screen, boolean propToScreen) {
     double timeStep = deltaT / steps;
+    Direction dir = null;
 
     while (deltaT > timeStep / 2) {
-      this.step(sketch, timeStep, screen, propToScreen);
+      dir = this.step(sketch, timeStep, screen, propToScreen);
 
       deltaT -= timeStep;
     }
+    
+    return dir;
   }
 
-  public void step(PApplet sketch, double timeStep, ArrayList<Body> bodies, boolean propToScreen) {
+  public Direction step(PApplet sketch, double timeStep, ArrayList<Body> bodies, boolean propToScreen) {
     this.move(timeStep);
     ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(sketch, bodies, timeStep, propToScreen);
 
-    this.handleCollisions(sketch, collided, new Screen(), propToScreen);
+    return this.handleCollisions(sketch, collided, new Screen(), propToScreen);
   }
 
-  public void step(PApplet sketch, double timeStep, Screen screen, boolean propToScreen) {
+  public Direction step(PApplet sketch, double timeStep, Screen screen, boolean propToScreen) {
     this.move(timeStep);
     ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(sketch, screen, timeStep, propToScreen);
 
-    this.handleCollisions(sketch, collided, screen, propToScreen);
+    return this.handleCollisions(sketch, collided, screen, propToScreen);
   } //<>//
 
-  public void handleCollisions(PApplet sketch, ArrayList<Pair<Body, Direction>> collided, Screen screen, boolean propToScreen) {
+  public Direction handleCollisions(PApplet sketch, ArrayList<Pair<Body, Direction>> collided, Screen screen, boolean propToScreen) {
     if (collided.size() == 0) {
-      return;
+      return null;
     }
+    
+    Direction out = Direction.DOWN; // default to down
 
     for (Pair<Body, Direction> body : collided) {
       Body copy = this.transform(body.first, sketch, screen.width, screen.height);
@@ -355,6 +363,7 @@ public class Body { //<>// //<>//
         {
           if (this.yOrigin - this.height / 2.0 < body.first.yOrigin + body.first.height / 2.0) {
             this.yOrigin = body.first.yOrigin + (this.height + body.first.height) / 2.0;
+            out = Direction.UP;
           }
           this.yVelocity = 0.0;
           this.yAcceleration = 0.0;
@@ -366,6 +375,7 @@ public class Body { //<>// //<>//
         {
           if (this.yOrigin + this.height / 2.0 > body.first.yOrigin - body.first.height / 2.0) {
             this.yOrigin = body.first.yOrigin - (this.height + body.first.height) / 2.0;
+            out = Direction.DOWN;
           }
           this.yVelocity = 0.0;
           this.yAcceleration = 0.0;
@@ -377,6 +387,7 @@ public class Body { //<>// //<>//
         {
           if (this.xOrigin + this.width / 2.0 > body.first.xOrigin - body.first.width / 2.0) {
             this.xOrigin = body.first.xOrigin - (this.width + body.first.width) / 2.0;
+            out = Direction.LEFT;
           }
           this.xVelocity = 0.0;
           this.xAcceleration = 0.0;
@@ -388,6 +399,7 @@ public class Body { //<>// //<>//
         {
           if (this.xOrigin - this.width / 2.0 < body.first.xOrigin + body.first.width / 2.0) {
             this.xOrigin = body.first.xOrigin + (this.width + body.first.width) / 2.0;
+            out = Direction.RIGHT;
           }
           this.xVelocity = 0.0;
           this.xAcceleration = 0.0;
@@ -406,6 +418,8 @@ public class Body { //<>// //<>//
         body.first = new Body(copy);
       }
     }
+    
+    return out;
   }
 
   public void draw(PApplet sketch) {

@@ -18,8 +18,6 @@ public enum Direction {
 }
 
 public class Actor extends Body {
-  int width, height;
-
   int facing;
   int dashes;
 
@@ -144,11 +142,18 @@ public class Actor extends Body {
   }
 
   public void act(PApplet sketch, Screen screen, double deltaT, HashMap<Integer, Pair<Boolean, Boolean>> inputs) {
-    if (onGround || grabbing) {
-      if (inputs.get((int) 'c').first && !inputs.get((int) 'c').second) {
-        // jumped this frame
-      }
+    Direction dir = this.update(sketch, deltaT, 10, screen);
+    
+    if (this.isOnGround(screen)) {
+      this.dashing = false;
+      this.timeOnGround += 1 / sketch.frameRate;
+      
+      this.onGround = true;
+    } else {
+      this.onGround = false;
+      this.timeOnGround = 0;
     }
+    
   }
 
   public Texture getTexture(String texturePath) {
@@ -180,11 +185,27 @@ public class Actor extends Body {
     this.move(deltaT);
   }
 
-  public void update(PApplet sketch, double deltaT, int steps, ArrayList<Body> bodies) {
-    super.update(sketch, deltaT, steps, bodies, false);
+  public Direction update(PApplet sketch, double deltaT, int steps, ArrayList<Body> bodies) {
+    // might not need direction for updating non-tile bodies
+    return super.update(sketch, deltaT, steps, bodies, false);
   }
 
-  public void update(PApplet sketch, double deltaT, int steps, Screen screen) {
-    super.update(sketch, deltaT, steps, screen, false);
+  public Direction update(PApplet sketch, double deltaT, int steps, Screen screen) {
+    return super.update(sketch, deltaT, steps, screen, false);
+  }
+
+  public boolean isOnGround(Screen screen) {
+    int leftX = min(screen.width - 1, max(0, (int) ((this.xOrigin - this.width / 2) / 8)));
+    int rightX = min(screen.width - 1, max(0, (int) ((this.xOrigin + this.width / 2) / 8)));
+
+    int y = min(screen.height - 1, max(0, (int) ((this.yOrigin - this.height / 2.05) / 8) - 1));
+
+    for (int i = leftX; i <= rightX; i++) {
+      if (screen.screen[screen.height - y - 1][i].hasHitbox && abs((float) (this.yOrigin - this.height / 2 - (screen.screen[screen.height - y - 1][i].hitbox.yOrigin + screen.screen[screen.height - y - 1][i].hitbox.height / 2))) < 0.05) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

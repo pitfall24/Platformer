@@ -8,3 +8,13 @@ test:
 foreground:test;
 backgroundScreens:test2;
 backgroundImages:;
+spawn:
+up:;
+down:;
+left:;
+right:test;
+test:
+up:;
+down:;
+left:spawn;
+right:;
