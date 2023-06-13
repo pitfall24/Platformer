@@ -83,7 +83,7 @@ public class Actor extends Body {
     this.height = height;
 
     this.facing = 0;
-    this.dashes = 1;
+    this.dashes = 2;
 
     this.timeOnGround = 0.0;
     this.timeDashing = 0.0;
@@ -144,16 +144,115 @@ public class Actor extends Body {
   public void act(PApplet sketch, Screen screen, double deltaT, HashMap<Integer, Pair<Boolean, Boolean>> inputs) {
     Direction dir = this.update(sketch, deltaT, 10, screen);
     
+    if (dir == null) {
+      // janky way for death
+      this.xOrigin = screen.spawns[0].xPos;
+      this.yOrigin = screen.spawns[0].yPos;
+    }
+    
+    /*
+    println("dir=" + dir);
+    println("timeOnGround=" + this.timeOnGround);
+    println("facing=" + this.facing);
+    println("dashing=" + this.dashing);
+    println("timeDashing=" + this.timeDashing);
+    println("dashes=" + this.dashes);
+    */
+    
     if (this.isOnGround(screen)) {
-      this.dashing = false;
       this.timeOnGround += 1 / sketch.frameRate;
-      
       this.onGround = true;
+      this.dashes = 2;
+      
+      this.xVelocity *= 0.85;
     } else {
       this.onGround = false;
       this.timeOnGround = 0;
+      
+      this.xVelocity *= 0.95;
+      this.yAcceleration = -25;
     }
     
+    if (this.dashing) {
+      this.timeDashing += 1.0 / sketch.frameRate;
+      
+      if (this.timeDashing > 0.33) {
+        this.dashing = false;
+        this.timeDashing = 0;
+        
+        if (this.yVelocity >= 0) {
+          this.yVelocity *= 0.3;
+        } else {
+          this.yVelocity *= 1.2;
+        }
+      } else {
+        if (inputs.get((int) 'c').first && this.onGround && independentDirectionHeld(inputs)) {
+          this.xVelocity = this.facing * 120;
+          this.yVelocity = 45;
+          
+          if (this.timeDashing > 0.2) {
+            // refunded
+            this.dashes = 2;
+          }
+          
+          this.dashing = false;
+          this.timeDashing = 0;
+          
+          this.onGround = false;
+          this.timeOnGround = 0;
+        }
+      }
+    } else if (this.dashes > 0 && inputs.get((int) 'x').first) {
+      this.dashes -= 1;
+      this.dashing = true;
+      this.timeDashing += 1.0 / sketch.frameRate;
+      
+      this.grabbing = false;
+      this.timeGrabbing = 0;
+      
+      if (!inputs.get((int) Direction.UP.label).first && !inputs.get((int) Direction.DOWN.label).first && !inputs.get((int) Direction.LEFT.label).first && !inputs.get((int) Direction.RIGHT.label).first) {
+        // default to facing
+        println("defaulted to facing=" + facing);
+        if (facing == 1) {
+          this.xVelocity = 45;
+        } else {
+          this.xVelocity = -45;
+        }
+      } else {
+        if (inputs.get((int) Direction.UP.label).first) {
+          this.yVelocity = 45;
+        } else if (inputs.get((int) Direction.DOWN.label).first) {
+          this.yVelocity = -45;
+        }
+        if (inputs.get((int) Direction.LEFT.label).first) {
+          this.xVelocity = -45;
+          this.facing = -1;
+        } else if (inputs.get((int) Direction.RIGHT.label).first) {
+          this.xVelocity = 45;
+          this.facing = 1;
+        }
+      }
+    } else if (inputs.get((int) 'c').first && this.isOnGround(screen)) {
+      this.yVelocity = 30;
+    }
+    
+    if (inputs.get((int) Direction.LEFT.label).first && !inputs.get((int) Direction.LEFT.label).second) {
+      this.xVelocity += -5;
+    } else if (inputs.get((int) Direction.RIGHT.label).first && !inputs.get((int) Direction.RIGHT.label).second) {
+      this.xVelocity += 5;
+      
+    }
+    
+    if (inputs.get((int) Direction.LEFT.label).first) {
+      this.xAcceleration = -0.15;
+    }
+    if (inputs.get((int) Direction.RIGHT.label).first) {
+      this.xAcceleration = 0.15;
+    }
+  }
+  
+  public boolean independentDirectionHeld(HashMap<Integer, Pair<Boolean, Boolean>> inputs) {
+    return inputs.get((int) Direction.LEFT.label).first != inputs.get((int) Direction.RIGHT.label).first;
   }
 
   public Texture getTexture(String texturePath) {
@@ -191,7 +290,35 @@ public class Actor extends Body {
   }
 
   public Direction update(PApplet sketch, double deltaT, int steps, Screen screen) {
-    return super.update(sketch, deltaT, steps, screen, false);
+    double timeStep = deltaT / steps;
+    Direction dir = null;
+
+    while (deltaT > timeStep / 2) {
+      dir = this.step(sketch, timeStep, screen, false);
+      
+      if (dir == null) {
+        return null;
+      }
+
+      deltaT -= timeStep;
+    }
+    
+    return dir;
+  }
+  
+  public Direction step(PApplet sketch, double timeStep, Screen screen, boolean propToScreen) {
+    this.move(timeStep);
+    ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(sketch, screen, timeStep, propToScreen);
+    collided.addAll(super.checkEntityCollisions(sketch, timeStep, propToScreen, screen.sprites));
+    
+    for (Pair<Body, Direction> pair : collided) {
+      if (pair.second == null) {
+        println("returned null");
+        return null;
+      }
+    }
+
+    return this.handleCollisions(sketch, collided, screen, propToScreen);
   }
 
   public boolean isOnGround(Screen screen) {

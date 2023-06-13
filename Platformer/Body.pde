@@ -1,4 +1,4 @@
-public class Body { //<>// //<>//
+public class Body { //<>// //<>// //<>//
   int width, height;
   double xOrigin, yOrigin;
   double xVelocity, yVelocity;
@@ -274,6 +274,39 @@ public class Body { //<>// //<>//
     return out;
   }
 
+  public ArrayList<Pair<Body, Direction>> checkEntityCollisions(PApplet sketch, double deltaT, boolean propToScreen, ArrayList<Sprite> sprites) {
+    ArrayList<Pair<Body, Direction>> out = new ArrayList<Pair<Body, Direction>>();
+
+    Body copy = new Body(this);
+    copy.unmove(deltaT);
+
+    for (Sprite sprite : sprites) {
+      Direction dir;
+      if (propToScreen) {
+        Body transformed = this.transform(sprite.hitbox, sketch, 40, 22);
+        if (this.colliding(transformed)) {
+          if (sprite.name.equals("platform")) {
+            dir = findCollisionDirection(deltaT, copy, transformed);
+          } else {
+            dir = null;
+          }
+          out.add(new Pair<Body, Direction>(sprite.hitbox, dir));
+        }
+      } else {
+        if (this.colliding(sprite.hitbox)) {
+          if (sprite.name.equals("platform")) {
+            dir = findCollisionDirection(deltaT, copy, sprite.hitbox);
+          } else {
+            dir = null;
+          }
+          out.add(new Pair<Body, Direction>(sprite.hitbox, dir));
+        }
+      }
+    }
+
+    return out;
+  }
+
   public ArrayList<Pair<Body, Direction>> checkEntityCollisions(PApplet sketch, Screen screen, double deltaT, boolean propToScreen) {
     ArrayList<Pair<Body, Direction>> out = new ArrayList<Pair<Body, Direction>>();
 
@@ -312,7 +345,7 @@ public class Body { //<>// //<>//
 
       deltaT -= timeStep;
     }
-    
+
     return dir;
   }
 
@@ -325,7 +358,7 @@ public class Body { //<>// //<>//
 
       deltaT -= timeStep;
     }
-    
+
     return dir;
   }
 
@@ -341,13 +374,15 @@ public class Body { //<>// //<>//
     ArrayList<Pair<Body, Direction>> collided = this.checkEntityCollisions(sketch, screen, timeStep, propToScreen);
 
     return this.handleCollisions(sketch, collided, screen, propToScreen);
-  } //<>//
+  }
 
   public Direction handleCollisions(PApplet sketch, ArrayList<Pair<Body, Direction>> collided, Screen screen, boolean propToScreen) {
     if (collided.size() == 0) {
-      return null;
+      // NEED WAY TO CHANGE THIS
+      // using null direction to indicite death. will not work in future
+      return Direction.DOWN;
     }
-    
+
     Direction out = Direction.DOWN; // default to down
 
     for (Pair<Body, Direction> body : collided) {
@@ -418,7 +453,7 @@ public class Body { //<>// //<>//
         body.first = new Body(copy);
       }
     }
-    
+
     return out;
   }
 

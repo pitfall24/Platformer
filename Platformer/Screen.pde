@@ -109,7 +109,7 @@ public class Screen extends Layer {
       writer.write("sprites:\n");
       
       for (Sprite sprite : this.sprites) {
-        writer.write(sprite.name + ":" + sprite.xPosition + "," + sprite.yPosition + ";" + sprite.hasHitbox + ";" + sprite.canInteract + ";\n");
+        writer.write(sprite.name + ":" + sprite.xPosition + "," + (this.height * 8 - sprite.yPosition) + ";" + sprite.hasHitbox + ";" + sprite.canInteract + ";\n");
       }
     }
     
@@ -193,9 +193,7 @@ public class Screen extends Layer {
       if (sc.hasNextLine() && sc.nextLine().equals("sprites:")) {
         while (sc.hasNextLine()) {
           String ln = sc.nextLine();
-          
-          println("parsing ln=" + ln);
-          
+                    
           String name = ln.substring(0, ln.indexOf(":"));
           int x = Integer.valueOf(ln.substring(ln.indexOf(":") + 1, ln.indexOf(",")));
           int y = Integer.valueOf(ln.substring(ln.indexOf(",") + 1, ln.indexOf(";")));

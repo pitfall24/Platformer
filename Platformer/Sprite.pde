@@ -38,7 +38,7 @@ public class Sprite {
       loaded.put(this.name, this.texture);
     }
 
-    this.hitbox = new Body(this.texture.width, this.texture.height, xPosition + this.texture.xOrigin, yPosition + this.texture.yOrigin);
+    this.hitbox = new Body(this.texture.width, this.texture.height, xPosition + this.texture.xOrigin, yPosition - this.texture.yOrigin);
     this.xPosition = xPosition;
     this.yPosition = yPosition;
 
@@ -96,7 +96,7 @@ public class Sprite {
     for (int i = 0; i < this.texture.width; i++) {
       for (int j = this.texture.height - 1; j >= 0; j--) {
         this.setSketchColor(sketch, i, j);
-        sketch.rect(i * pixelW + this.xPosition * pixelW, j * pixelH + this.yPosition * pixelH, pixelW, pixelH);
+        sketch.rect(i * pixelW + this.xPosition * pixelW, 8 * tilesTall * pixelH - (this.yPosition * pixelH - j * pixelH), pixelW, pixelH);
       }
     }
 
