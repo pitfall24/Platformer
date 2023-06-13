@@ -12,6 +12,7 @@ public class Screen extends Layer {
   int numSpawns;
   Location[] spawns;
   Tile[][] screen;
+  ArrayList<Sprite> sprites;
   
   public Screen() {
     this.height = 22;
@@ -21,7 +22,8 @@ public class Screen extends Layer {
     this.numSpawns = 0;
     Location[] spawns = new Location[0];
     
-    Tile[][] screen = new Tile[this.height][this.width];
+    this.screen = new Tile[this.height][this.width];
+    this.sprites = new ArrayList<Sprite>();
   }
   
   public Screen(String path) {
@@ -103,6 +105,14 @@ public class Screen extends Layer {
       writer.write("\n");
     }
     
+    if (this.sprites.size() != 0) {
+      writer.write("sprites:\n");
+      
+      for (Sprite sprite : this.sprites) {
+        writer.write(sprite.name + ":" + sprite.xPosition + "," + sprite.yPosition + ";" + sprite.hasHitbox + ";" + sprite.canInteract + ";\n");
+      }
+    }
+    
     writer.close();
   }
 
@@ -177,6 +187,27 @@ public class Screen extends Layer {
           }
         }
       }
+      
+      this.sprites = new ArrayList<Sprite>();
+      
+      if (sc.hasNextLine() && sc.nextLine().equals("sprites:")) {
+        while (sc.hasNextLine()) {
+          String ln = sc.nextLine();
+          
+          println("parsing ln=" + ln);
+          
+          String name = ln.substring(0, ln.indexOf(":"));
+          int x = Integer.valueOf(ln.substring(ln.indexOf(":") + 1, ln.indexOf(",")));
+          int y = Integer.valueOf(ln.substring(ln.indexOf(",") + 1, ln.indexOf(";")));
+          
+          ln = ln.substring(ln.indexOf(";") + 1);
+          
+          boolean hasHitbox = ln.substring(0, ln.indexOf(";")).equals("true");
+          boolean canInteract = ln.substring(ln.indexOf(";") + 1).equals("true;");
+                    
+          this.sprites.add(new Sprite(name, absoluteRepoPath() + "resources/textures/bin/" + name + ".bin", hasHitbox, canInteract, x, y));
+        }
+      }
 
       sc.close();
     }
@@ -217,6 +248,10 @@ public class Screen extends Layer {
         tile._draw(sketch, this.width, this.height);
       }
     }
+    
+    for (Sprite sprite : this.sprites) {
+      sprite.draw(sketch, this.width, this.height);
+    }
 
     sketch.popStyle();
   }
@@ -227,6 +262,10 @@ public class Screen extends Layer {
         tile.forceDrawHitbox(sketch, this.width, this.height);
       }
     }
+    
+    for (Sprite sprite : this.sprites) {
+      sprite.forceDrawHitbox(sketch, this.width, this.height);
+    }
   }
 
   public void drawHitboxes(PApplet sketch) {
@@ -234,6 +273,10 @@ public class Screen extends Layer {
       for (Tile tile : row) {
         tile.drawHitbox(sketch, this.width, this.height);
       }
+    }
+    
+    for (Sprite sprite : this.sprites) {
+      sprite.drawHitbox(sketch, this.width, this.height);
     }
   }
 

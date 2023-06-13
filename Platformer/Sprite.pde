@@ -1,10 +1,8 @@
-import java.io.ObjectInputStream; //<>//
+import java.io.ObjectInputStream;
 import java.io.FileInputStream;
 import java.util.HashMap;
 
-static HashMap<String, Texture> loaded = new HashMap<String, Texture>();
-
-public class Tile {
+public class Sprite {
   String name;
   Texture texture;
 
@@ -15,7 +13,7 @@ public class Tile {
   boolean hasHitbox;
   boolean canInteract;
   
-  public Tile(Tile other) {
+  public Sprite(Sprite other) {
     this.name = other.name;
     this.texture = other.texture;
     
@@ -27,26 +25,7 @@ public class Tile {
     this.canInteract = other.canInteract;
   }
 
-  public Tile(String name, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
-    this.name = name;
-
-    if (loaded.containsKey(this.name)) {
-      this.texture = loaded.get(this.name);
-    } else {
-      this.texture = new Texture(absoluteRepoPath() + "resources/textures/tiles/" + name, 8, 8);
-
-      loaded.put(this.name, this.texture);
-    }
-
-    this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
-    this.xPosition = xPosition;
-    this.yPosition = yPosition;
-
-    this.hasHitbox = hasHitbox;
-    this.canInteract = canInteract;
-  }
-
-  public Tile(String name, String texturePath, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
+  public Sprite(String name, String texturePath, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
     this.name = name;
 
     if (loaded.containsKey(this.name)) {
@@ -59,7 +38,7 @@ public class Tile {
       loaded.put(this.name, this.texture);
     }
 
-    this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.hitbox = new Body(this.texture.width, this.texture.height, xPosition + this.texture.xOrigin, yPosition + this.texture.yOrigin);
     this.xPosition = xPosition;
     this.yPosition = yPosition;
 
@@ -67,11 +46,11 @@ public class Tile {
     this.canInteract = canInteract;
   }
 
-  public Tile(String name, Texture texture, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
+  public Sprite(String name, Texture texture, boolean hasHitbox, boolean canInteract, int xPosition, int yPosition) throws Exception {
     this.name = name;
     this.texture = texture;
 
-    this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.hitbox = new Body(8, 8, xPosition + this.texture.xOrigin, yPosition + this.texture.yOrigin);
     this.xPosition = xPosition;
     this.yPosition = yPosition;
 
@@ -83,11 +62,11 @@ public class Tile {
     }
   }
 
-  public Tile(Tile other, int xPosition, int yPosition) {
+  public Sprite(Sprite other, int xPosition, int yPosition) {
     this.name = other.name;
     this.texture = other.texture;
 
-    this.hitbox = new Body(8, 8, xPosition + 4.0, yPosition + 4.0);
+    this.hitbox = new Body(other.texture.width, other.texture.height, xPosition + this.texture.xOrigin, yPosition + this.texture.yOrigin);
     this.xPosition = xPosition;
     this.yPosition = yPosition;
 
@@ -96,13 +75,9 @@ public class Tile {
   }
   
   boolean equals(Object o) {
-    Tile other = (Tile) o;
+    Sprite other = (Sprite) o;
     
     return this.name.equals(other.name) && this.texture.equals(other.texture) && this.hasHitbox == other.hasHitbox && this.canInteract == other.canInteract;
-  }
-
-  public String toString() {
-    return this.texture.toString();
   }
 
   public void draw(PApplet sketch, int tilesWide, int tilesTall) {

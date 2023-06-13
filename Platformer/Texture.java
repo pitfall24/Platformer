@@ -9,6 +9,9 @@ public class Texture implements Serializable {
 
   int width;
   int height;
+  
+  int xOrigin;
+  int yOrigin;
 
   byte[][] redTexture;
   byte[][] greenTexture;
@@ -137,6 +140,18 @@ public class Texture implements Serializable {
           line = line.substring(line.indexOf(",") + 1);
         }
       }
+      
+      if (sc.hasNextLine()) {
+        String ln = sc.nextLine();
+        
+        assert(ln.substring(0, ln.indexOf(":")).equals("origin"));
+        
+        this.xOrigin = Integer.valueOf(ln.substring(ln.indexOf(":") + 1, ln.indexOf(",")));
+        this.yOrigin = Integer.valueOf(ln.substring(ln.indexOf(",") + 1, ln.indexOf(";")));
+      } else {
+        this.xOrigin = this.width / 2;
+        this.yOrigin = this.height / 2;
+      }
 
       sc.close();
     }
@@ -149,37 +164,9 @@ public class Texture implements Serializable {
   public String toString() {
     String out = "";
 
-    out += "redTexture:\n";
-    for (byte[] row : this.redTexture) {
-      for (byte i : row) {
-        out += i + ", ";
-      }
-      out += "\n";
-    }
-
-    out += "greenTexture:\n";
-    for (byte[] row : this.greenTexture) {
-      for (byte i : row) {
-        out += i + ", ";
-      }
-      out += "\n";
-    }
-
-    out += "blueTexture:\n";
-    for (byte[] row : this.blueTexture) {
-      for (byte i : row) {
-        out += i + ", ";
-      }
-      out += "\n";
-    }
-
-    out += "alphaTexture:\n";
-    for (byte[] row : this.alphaTexture) {
-      for (byte i : row) {
-        out += i + ", ";
-      }
-      out += "\n";
-    }
+    out += this.path + "\n";
+    out += "width=" + this.width + ", height=" + this.height + "\n";
+    out += "xOrigin=" + this.xOrigin + ", yOrigin=" + this.yOrigin + "\n";
 
     return out;
   }

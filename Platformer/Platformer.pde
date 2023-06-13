@@ -11,8 +11,16 @@ HashMap<Integer, Pair<Boolean, Boolean>> inputs;
 String newName;
 
 int tileInd;
-int switchInd;
-ArrayList<Tile> palette;
+int tileSwitchInd;
+
+int spriteInd;
+int spriteSwitchInd;
+
+boolean tiling;
+boolean hitboxes;
+
+ArrayList<Tile> tilePalette;
+ArrayList<Sprite> spritePalette;
 
 boolean hasHitbox;
 boolean canInteract;
@@ -21,7 +29,7 @@ void setup() {
   //try { refreshBinaries(); exit(); return; } catch (Exception e) { e.printStackTrace(); println("refresh error ^^"); }
 
   frameRate(30);
-  size(960, 528);
+  size(1920, 1056);
 
   rectMode(CENTER);
 
@@ -39,37 +47,45 @@ void setup() {
    inputs.put((int) 'c', new Pair<Boolean, Boolean>(false, false));
    */
 
-  editing = new Screen("world1", "test");
-  newName = "test2";
+  editing = new Screen("world1", "spawn");
+  newName = "final";
 
   back = new Background(absoluteRepoPath() + "resources/images/starryBackground.png");
 
   tileInd = 0;
-  switchInd = 0;
-  palette = new ArrayList<Tile>();
+  tileSwitchInd = 0;
+
+  spriteInd = 0;
+  spriteSwitchInd = 0;
+
+  tiling = true;
+  hitboxes = true;
+
+  tilePalette = new ArrayList<Tile>();
+  spritePalette = new ArrayList<Sprite>();
 
   for (File file : new File(absoluteRepoPath() + "resources/textures/tiles/").listFiles()) {
     if (file.getName().charAt(0) == '.') {
       continue;
     }
-    
+
     try {
       String name = removeExtension(file.getName());
-      palette.add(new Tile(name, absoluteRepoPath() + "resources/textures/bin/" + name + ".bin", false, false, 0, 0));
+      tilePalette.add(new Tile(name, absoluteRepoPath() + "resources/textures/bin/" + name + ".bin", false, false, 0, 0));
     }
     catch (Exception e) {
       e.printStackTrace();
     }
   }
-  
+
   for (File file : new File(absoluteRepoPath() + "resources/textures/sprites/").listFiles()) {
     if (file.getName().charAt(0) == '.') {
       continue;
     }
-    
+
     try {
       String name = removeExtension(file.getName());
-      palette.add(new Tile(name, absoluteRepoPath() + "resources/textures/bin/" + name + ".bin", false, false, 0, 0));
+      spritePalette.add(new Sprite(name, absoluteRepoPath() + "resources/textures/bin/" + name + ".bin", false, false, 0, 0));
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -87,7 +103,18 @@ void draw() {
   back.draw(this);
 
   editing.draw(this);
-  //editing.drawHitboxes(this);
+  if (hitboxes) {
+    editing.drawHitboxes(this);
+  }
+  
+  if (!tiling) {
+    Sprite toDraw = spritePalette.get(spriteInd);
+    
+    toDraw.xPosition = (int) (mouseX / (width / (8.0 * editing.width))) - toDraw.texture.xOrigin;
+    toDraw.yPosition = (int) (mouseY / (height / (8.0 * editing.height))) - toDraw.texture.yOrigin;
+    
+    toDraw.draw(this, editing.width, editing.height);
+  }
 
   /*
   for (Map.Entry<Integer, Pair<Boolean, Boolean>> entry : inputs.entrySet()) {
@@ -247,19 +274,35 @@ void keyPressed() {
 
 // for creating new screens
 void mouseReleased() {
-  int x = mouseX / (width / editing.width);
-  int y = editing.height - mouseY / (height / editing.height);
+  if (tiling) {
+    int x = mouseX / (width / editing.width);
+    int y = editing.height - mouseY / (height / editing.height);
 
-  Tile tile = new Tile(palette.get(tileInd));
+    Tile tile = new Tile(tilePalette.get(tileInd));
 
-  tile.hitbox = new Body(8, 8, x * 8 + 4.0, (y - 1) * 8 + 4.0);
-  tile.xPosition = x * 8;
-  tile.yPosition = (y - 1) * 8;
+    tile.hitbox = new Body(8, 8, x * 8 + 4.0, (y - 1) * 8 + 4.0);
+    tile.xPosition = x * 8;
+    tile.yPosition = (y - 1) * 8;
 
-  tile.hasHitbox = hasHitbox;
-  tile.canInteract = canInteract;
+    tile.hasHitbox = hasHitbox;
+    tile.canInteract = canInteract;
 
-  editing.screen[editing.height - y][x] = tile;
+    editing.screen[editing.height - y][x] = tile;
+  } else {
+    int x = (int) (mouseX / (width / (8.0 * editing.width)));
+    int y = (int) (mouseY / (height / (8.0 * editing.height)));
+
+    Sprite sprite = new Sprite(spritePalette.get(spriteInd));
+    
+    sprite.hitbox = new Body(sprite.texture.width, sprite.texture.height, x, editing.height * 8 - y);
+    sprite.xPosition = x - sprite.texture.xOrigin;
+    sprite.yPosition = y - sprite.texture.yOrigin;
+
+    sprite.hasHitbox = hasHitbox;
+    sprite.canInteract = canInteract;
+
+    editing.sprites.add(sprite);
+  }
 }
 
 void keyReleased() {
@@ -267,7 +310,7 @@ void keyReleased() {
   case ENTER:
     {
       try {
-        editing.writeScreen(absoluteRepoPath() + "resources/worlds/screens/" + newName + ".txt", newName);
+        editing.writeScreen(absoluteRepoPath() + "resources/worlds/world1/screens/" + newName + ".txt", newName);
         exit();
       }
       catch (Exception e) {
@@ -292,36 +335,56 @@ void keyReleased() {
     }
   case 'e':
     {
-      int temp = tileInd;
-      tileInd = switchInd;
-      switchInd = temp;
+      if (tiling) {
+        int temp = tileInd;
+        tileInd = tileSwitchInd;
+        tileSwitchInd = temp;
+      } else {
+        int temp = spriteInd;
+        spriteInd = spriteSwitchInd;
+        spriteSwitchInd = temp;
+      }
     }
   case 's':
     {
-      editing.numSpawns += 1;
-      Location[] added = new Location[editing.numSpawns];
-
-      for (int i = 0; i < editing.numSpawns - 1; i++) {
-        added[i] = editing.spawns[i];
+      tiling = !tiling;
+      if (tiling) {
+        println("now tiling");
+      } else {
+        println("now spriting");
       }
-      added[editing.numSpawns - 1] = new Location(mouseX * editing.width / width, editing.height - mouseY * editing.height / height);
-
-      editing.spawns = added;
-      break;
+    }
+  case 'd':
+    {
+      hitboxes = !hitboxes;
     }
   }
 }
 
 void mouseWheel(MouseEvent event) {
-  if (event.getCount() > 0) {
-    tileInd = (tileInd + 1) % palette.size();
-  } else if (event.getCount() < 0) {
-    tileInd = (tileInd - 1) % palette.size();
+  if (tiling) {
+    if (event.getCount() > 0) {
+      tileInd = (tileInd + 1) % tilePalette.size();
+    } else if (event.getCount() < 0) {
+      tileInd = (tileInd - 1) % tilePalette.size();
 
-    if (tileInd < 0) {
-      tileInd += palette.size();
+      if (tileInd < 0) {
+        tileInd += tilePalette.size();
+      }
     }
-  }
 
-  println("tileInd=" + tileInd + ", tilename=" + palette.get(tileInd).name);
+    println("tileInd=" + tileInd + ", tilename=" + tilePalette.get(tileInd).name);
+  } else {
+    if (event.getCount() > 0) {
+      spriteInd = (spriteInd + 1) % spritePalette.size();
+    } else if (event.getCount() < 0) {
+      spriteInd = (spriteInd - 1) % spritePalette.size();
+
+      if (spriteInd < 0) {
+        spriteInd += spritePalette.size();
+      }
+    }
+
+    println("spriteInd=" + spriteInd + ", spritename=" + spritePalette.get(spriteInd).name);
+  }
 }
