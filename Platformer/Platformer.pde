@@ -30,7 +30,7 @@ void setup() {
   //try { refreshBinaries(); exit(); return; } catch (Exception e) { e.printStackTrace(); println("refresh error ^^"); }
 
   frameRate(30);
-  size(1920, 1056);
+  size(960, 528);
 
   rectMode(CENTER);
 

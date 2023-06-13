@@ -144,10 +144,19 @@ public class Actor extends Body {
   public void act(PApplet sketch, Screen screen, double deltaT, HashMap<Integer, Pair<Boolean, Boolean>> inputs) {
     Direction dir = this.update(sketch, deltaT, 10, screen);
     
-    if (dir == null) {
+    if (dir == null || this.xOrigin < 0 || this.xOrigin > screen.width * 8 || this.yOrigin < 0 || this.yOrigin > screen.height * 8) {
       // janky way for death
       this.xOrigin = screen.spawns[0].xPos;
       this.yOrigin = screen.spawns[0].yPos;
+      
+      this.xVelocity = 0;
+      this.yVelocity = 0;
+      
+      this.xAcceleration = 0;
+      this.yAcceleration = 0;
+      
+      this.xJerk = 0;
+      this.yJerk = 0;
     }
     
     /*
